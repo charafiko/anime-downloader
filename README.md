@@ -30,3 +30,12 @@ do not even want to try those OS, do it on your own ;D
 
 ![Settings](img/anime-downloader-settings.png)
 
+### Nice, i'm gonna try it!
+
+Just go into github release section and download the .jar file.
+
+Execute it just like any other java program.
+
+```
+java -jar animedownloader_main.jar
+```

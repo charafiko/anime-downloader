@@ -9,7 +9,10 @@
     <bookmark url="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/openload/OpenloadMarionette.java" line="166" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="103af4ae-315e-44b1-bfc7-764ffddab6d6" name="Default" comment="" />
+    <list default="true" id="103af4ae-315e-44b1-bfc7-764ffddab6d6" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -153,10 +156,22 @@
           <provider editor-type-id="text-editor" />
         </entry>
       </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="462">
+                <caret line="36" column="43" lean-forward="true" selection-start-line="36" selection-start-column="43" selection-end-line="36" selection-end-column="43" />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="VideoRowController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/video/VideoRowController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1638">
+            <state relative-caret-position="-1634">
               <caret line="328" column="19" selection-start-line="328" selection-start-column="19" selection-end-line="328" selection-end-column="19" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -169,18 +184,6 @@
                 <element signature="e#6250#6251#0" expanded="true" />
                 <element signature="e#6284#6285#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="README.md" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/README.md">
-          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-            <state split_layout="SPLIT">
-              <first_editor relative-caret-position="544">
-                <caret line="32" selection-start-line="32" selection-end-line="32" />
-              </first_editor>
-              <second_editor />
             </state>
           </provider>
         </entry>
@@ -224,9 +227,9 @@
       <find>progress</find>
       <find>subt</find>
       <find>abortDown</find>
-      <find>mDownloadEnabled</find>
       <find>abortDownload</find>
       <find>mCurrentVideoState</find>
+      <find>mDownloadEnabled</find>
       <find>aborted</find>
     </findStrings>
     <replaceStrings>
@@ -651,9 +654,9 @@
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/video/VideoProvider.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/vvvvid/VVVVIDMarionette.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/video/VideoRowController.java" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
@@ -725,7 +728,10 @@
               <item name="AnimeDownloader" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="org" type="462c0819:PsiDirectoryNode" />
+              <item name="docheinstein" type="462c0819:PsiDirectoryNode" />
+              <item name="animedownloader" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="animedownloader" type="b2602c69:ProjectViewProjectNode" />
@@ -733,7 +739,6 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="resources" type="462c0819:PsiDirectoryNode" />
-              <item name="assets" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -914,15 +919,16 @@
       <workItem from="1535953499330" duration="12818000" />
       <workItem from="1535976923570" duration="5481000" />
       <workItem from="1535982412413" duration="1354000" />
-      <workItem from="1536003424035" duration="3089000" />
+      <workItem from="1536003424035" duration="3603000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="119555000" />
+    <option name="totallyTimeSpent" value="120069000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="45" width="1920" height="1035" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -935,10 +941,10 @@
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.26148796" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.25382933" />
+      <window_info anchor="bottom" id="Terminal" order="7" visible="true" weight="0.25382933" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20607029" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20607029" />
       <window_info anchor="bottom" id="Build" order="7" weight="0.26148796" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="Gradle" order="3" weight="0.14909478" />
@@ -1370,13 +1376,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/assets/video_row.fxml">
-      <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
-      <provider editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/video/VideoRowController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1638">
+        <state relative-caret-position="-1634">
           <caret line="328" column="19" selection-start-line="328" selection-start-column="19" selection-end-line="328" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1392,11 +1394,15 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/assets/video_row.fxml">
+      <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
+      <provider editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
-          <first_editor relative-caret-position="544">
-            <caret line="32" selection-start-line="32" selection-end-line="32" />
+          <first_editor relative-caret-position="462">
+            <caret line="36" column="43" lean-forward="true" selection-start-line="36" selection-start-column="43" selection-end-line="36" selection-end-column="43" />
           </first_editor>
           <second_editor />
         </state>
