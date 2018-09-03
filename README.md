@@ -19,12 +19,12 @@ Last but not least, just because I had nothing better to do =)
 This works for sure on Linux and probably even on Windows and MacOS, but I
 do not even want to try those OS, do it on your own ;D
 
-#### Supported sites
+### Supported sites
 
 * VVVVID (https://www.vvvvid.it)
 * Openload (https://openload.co)
 
-#### What it looks like
+### What it looks like
 
 ![Main Window](img/anime-downloader-main-window.png)
 
