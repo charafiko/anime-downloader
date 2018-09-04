@@ -346,33 +346,27 @@ public class VVVVIDMarionette
                 new HttpDownloader().download(
                     segmentLink,
                     segmentOutputFile.getAbsolutePath(),
-                    new HttpDownloader.DownloadObserver() {
-                        @Override
-                        public void onProgress(long downloadedBytes, long millis) {}
+                    downloadedBytes -> {
+                        long curMillis = System.currentTimeMillis();
 
-                        @Override
-                        public void onEnd() {
-                            long curMillis = System.currentTimeMillis();
+                        mDownloadedBytes += segmentOutputFile.length();
 
-                            mDownloadedBytes += segmentOutputFile.length();
+                        int remainingSegmentCount = segmentCount - mSegmentIncrementalNumber;
 
-                            int remainingSegmentCount = segmentCount - mSegmentIncrementalNumber;
+                        L.verbose("Downloaded segment is " + segmentOutputFile.length() + " bytes");
+                        L.verbose("Already downloaded bytes are so " + mDownloadedBytes);
+                        long estimatedVideoSize =
+                            remainingSegmentCount * (mDownloadedBytes / mSegmentIncrementalNumber)
+                                + mDownloadedBytes;
 
-                            L.verbose("Downloaded segment is " + segmentOutputFile.length() + " bytes");
-                            L.verbose("Already downloaded bytes are so " + mDownloadedBytes);
-                            long estimatedVideoSize =
-                                remainingSegmentCount * (mDownloadedBytes / mSegmentIncrementalNumber)
-                                    + mDownloadedBytes;
+                        L.verbose("Estimated video size: " + estimatedVideoSize);
 
-                            L.verbose("Estimated video size: " + estimatedVideoSize);
+                        mVideoInfo.size = estimatedVideoSize;
 
-                            mVideoInfo.size = estimatedVideoSize;
+                        notifySizeToObserver(mVideoInfo);
 
-                            notifySizeToObserver(mVideoInfo);
-
-                            if (mObserver != null)
-                                mObserver.onVideoDownloadProgress(mDownloadedBytes, curMillis);
-                        }
+                        if (mObserver != null)
+                            mObserver.onVideoDownloadProgress(mDownloadedBytes, curMillis);
                     },
                     Integer.MAX_VALUE
                 );

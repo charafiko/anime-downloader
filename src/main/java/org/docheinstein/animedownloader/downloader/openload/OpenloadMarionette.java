@@ -210,25 +210,20 @@ public class OpenloadMarionette
             mDownloader.download(
                 streamDirectLink,
                 outputFile.getAbsolutePath(),
-                new HttpDownloader.DownloadObserver() {
-                    @Override
-                    public void onProgress(long downloadedBytes,
-                                           long millis) {
-                        if (mObserver != null)
-                            mObserver.onVideoDownloadProgress(downloadedBytes, millis);
-                    }
-
-                    @Override
-                    public void onEnd() {
-                        if (mObserver != null)
-                            mObserver.onVideoDownloadFinished();
-                    }
+                downloadedBytes -> {
+                    long curMillis = System.currentTimeMillis();
+                    if (mObserver != null)
+                        mObserver.onVideoDownloadProgress(downloadedBytes, curMillis);
                 },
                 (int) M
             );
+
+            if (mObserver != null)
+                mObserver.onVideoDownloadFinished();
         } catch (IOException e) {
             L.error("Error occurred while startDownload the video", e);
         }
+
     }
 
     /**
