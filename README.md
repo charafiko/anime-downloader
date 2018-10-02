@@ -23,6 +23,7 @@ do not even want to try those OS, do it on your own ;D
 
 * VVVVID (https://www.vvvvid.it)
 * Openload (https://openload.co)
+* Streamango (https://streamango.com)
 
 ### What it looks like
 

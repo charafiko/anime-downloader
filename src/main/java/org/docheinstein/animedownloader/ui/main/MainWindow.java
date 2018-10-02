@@ -5,9 +5,15 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import org.docheinstein.animedownloader.commons.constants.Config;
 
+import org.docheinstein.animedownloader.commons.constants.Const;
 import org.docheinstein.animedownloader.commons.constants.Resources;
 import org.docheinstein.animedownloader.commons.utils.ApplicationUtil;
+import org.docheinstein.commons.utils.http.HttpDownloader;
 import org.docheinstein.commons.utils.javafx.FXUtil;
+
+import java.io.IOException;
+
+import static org.docheinstein.animedownloader.commons.constants.Const.Math.M;
 
 /**
  * Main application class
@@ -43,6 +49,7 @@ public class MainWindow extends Application {
         mWindow.getIcons().setAll(Resources.UI.ICONS);
         mWindow.setMinWidth(Config.App.MIN_WIDTH);
         mWindow.setMinHeight(Config.App.MIN_HEIGHT);
+
     }
 
     /**

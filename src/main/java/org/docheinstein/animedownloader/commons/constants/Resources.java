@@ -16,6 +16,7 @@ public class Resources {
         public static final Image OPEN_FOLDER;
         public static final Image OPENLOAD;
         public static final Image VVVVID;
+        public static final Image STREAMANGO;
 
         static {
             ICONS = new Image[] {
@@ -37,6 +38,9 @@ public class Resources {
 
             VVVVID = FXUtil.createImage(
                 ResourceUtil.getImageStream("vvvvid.jpg"));
+
+            STREAMANGO = FXUtil.createImage(
+                ResourceUtil.getImageStream("streamango.png"));
         }
 
     }

@@ -1,5 +1,6 @@
 package org.docheinstein.animedownloader.downloader.openload;
 
+import org.docheinstein.animedownloader.downloader.base.VideoFileMarionette;
 import org.docheinstein.commons.utils.file.FileUtil;
 import org.docheinstein.commons.utils.http.HttpDownloader;
 import org.docheinstein.commons.utils.http.HttpRequester;
@@ -24,8 +25,7 @@ import static org.docheinstein.animedownloader.commons.constants.Const.Math.M;
 /**
  * Specific marionette able to download video from "https://openload.co".
  */
-public class OpenloadMarionette
-    extends ChromeMarionetteDownloader {
+public class OpenloadMarionette extends VideoFileMarionette {
 
     private static final DocLogger L =
         DocLogger.createForClass(OpenloadMarionette.class);
@@ -36,8 +36,6 @@ public class OpenloadMarionette
     /** ID of the container of the video's direct link. */
     private static final String DIRECT_LINK_CURRENT_CONTAINER_ID = "DtsBlkVFQx";
 
-    private HttpDownloader mDownloader;
-
     public OpenloadMarionette(String downloadUrl,
                               File outputPath,
                               File driverPath,
@@ -47,35 +45,36 @@ public class OpenloadMarionette
     }
 
     @Override
-    public void startDownload() {
-        if (!isInitialized())
-            initMarionette();
+    public String getVideoLink() {
+        final String cdnLink = getCDNLink();
 
-        String directLink = getStreamDirectLink(getCDNLink());
-        VideoInfo videoInfo = retrieveVideoInfo(directLink);
-        notifyObserver(videoInfo);
-        doDownload(directLink, videoInfo);
-    }
+        Map<String, List<String>> headerFields = HttpRequester
+            .head(cdnLink)
+            .allowRedirect(false)
+            .send()
+            .getHeaderFields();
 
-    @Override
-    public void abortDownload() {
-        // Notifies anyhow
-        if (mObserver != null)
-            mObserver.onVideoDownloadAborted();
+        printHeaderFields(headerFields);
 
-        if (mDownloader == null) {
-            L.warn("Can't stop startDownload since underlying HttpDownloader is null");
-            return;
+        List<String> directLinks = headerFields.get("Location");
+
+        if (directLinks == null || directLinks.size() < 1) {
+            L.error("Can't retrieve 'Location' header");
+            return null;
         }
 
-        mDownloader.enableDownload(false);
+        String streamDirectLink = directLinks.get(0);
+
+        L.debug("Direct link location resolved to: " + streamDirectLink);
+
+        return streamDirectLink;
     }
 
     /**
      * Retrieves the CDN link of the video.
      * <p>
      * The CDN link is "more external" than the stream link provided by
-     * {@link #getStreamDirectLink(String)}
+     * {@link #getVideoLink()}
      * @return the cdn link of the video.
      */
     private String getCDNLink() {
@@ -108,59 +107,15 @@ public class OpenloadMarionette
         return cdnLink;
     }
 
-    /**
-     * Returns the stream direct link of the video.
-     * @param cdnLink the cdn link to visit for figure out the direct link
-     * @return the video direct link
-     */
-    private String getStreamDirectLink(String cdnLink) {
-        Map<String, List<String>> headerFields = HttpRequester
-            .head(cdnLink)
-            .allowRedirect(false)
-            .send()
-            .getHeaderFields();
-
-        printHeaderFields(headerFields);
-
-        List<String> directLinks = headerFields.get("Location");
-
-        if (directLinks == null || directLinks.size() < 1) {
-            L.error("Can't retrieve 'Location' header");
-            return null;
-        }
-
-        String streamDirectLink = directLinks.get(0);
-
-        L.debug("Direct link location resolved to: " + streamDirectLink);
-
-        return streamDirectLink;
-    }
-
-    /**
-     * Retrieves the video info from the stream direct link.
-     * @param streamDirectLink the stream the link
-     * @return the video info
-     */
-    private VideoInfo retrieveVideoInfo(String streamDirectLink) {
+    @Override
+    public VideoInfo getVideoInfo(HttpRequester.Response headResponse) {
         VideoInfo videoInfo = new VideoInfo();
+
+        Map<String, List<String>> headerFields = headResponse.getHeaderFields();
 
         // Size
 
-        L.debug("Retrieving video info (size, filename) from: " + streamDirectLink);
-
-        HttpRequester.Response resp = HttpRequester
-            .head(streamDirectLink)
-            .allowRedirect(false)
-            .initialized()
-            .userAgent("curl/7.52.1")
-            .accept("*/*")
-            .send();
-
-        Map<String, List<String>> headerFields = resp.getHeaderFields();
-
-        printHeaderFields(headerFields);
-
-        videoInfo.size = resp.getContentLength();
+        videoInfo.size = headResponse.getContentLength();
 
         // Filename
 
@@ -184,70 +139,4 @@ public class OpenloadMarionette
         return videoInfo;
     }
 
-    /**
-     * Actually starts the download of the video from the given stream link.
-     * @param streamDirectLink the direct link of the video stream
-     * @param videoInfo the video info
-     */
-    private void doDownload(String streamDirectLink, VideoInfo videoInfo) {
-        L.info("Downloading video from direct link stream: " + streamDirectLink);
-
-        File outputFile;
-
-        if (FileUtil.exists(mDownloadFolder))
-            outputFile = new File(mDownloadFolder, videoInfo.filename);
-        else
-            outputFile = new File(videoInfo.filename);
-
-        L.info("Video will be downloaded to: " + outputFile.getAbsolutePath());
-
-        if (mObserver != null)
-            mObserver.onVideoDownloadStarted();
-
-        try {
-            mDownloader = new HttpDownloader();
-
-            mDownloader.download(
-                streamDirectLink,
-                outputFile.getAbsolutePath(),
-                downloadedBytes -> {
-                    long curMillis = System.currentTimeMillis();
-                    if (mObserver != null)
-                        mObserver.onVideoDownloadProgress(downloadedBytes, curMillis);
-                },
-                (int) M
-            );
-
-            if (mObserver != null)
-                mObserver.onVideoDownloadFinished();
-        } catch (IOException e) {
-            L.error("Error occurred while startDownload the video", e);
-        }
-
-    }
-
-    /**
-     * Notifies the observes about the new video info.
-     * @param videoInfo the video info to notify
-     */
-    private void notifyObserver(VideoInfo videoInfo) {
-        L.debug("Video size detected: " + videoInfo.size / M + "MB");
-        if (mObserver != null)
-            mObserver.onVideoSizeDetected(videoInfo.size, true);
-
-        L.debug("Video title detected: " + videoInfo.title);
-        if (mObserver != null)
-            mObserver.onVideoTitleDetected(videoInfo.title);
-    }
-
-    /**
-     * Prints the header fields; for debugging purpose.
-     * @param hf the header fields of an HTTP packet
-     */
-    private static void printHeaderFields(Map<String, List<String>> hf) {
-        hf.forEach((k, vs) -> {
-            L.debug("Key = " + k);
-            vs.forEach(v -> L.debug("--Value = " + v));
-        });
-    }
 }

@@ -1,6 +1,7 @@
 package org.docheinstein.animedownloader.video;
 
 import javafx.scene.image.Image;
+import org.docheinstein.animedownloader.downloader.streamango.StreamangoMarionette;
 import org.docheinstein.animedownloader.downloader.vvvvid.VVVVIDMarionette;
 import org.docheinstein.commons.utils.types.StringUtil;
 import org.docheinstein.animedownloader.commons.constants.Resources;
@@ -14,8 +15,10 @@ import java.io.File;
  * Represents a site that provides video streams.
  */
 public enum  VideoProvider {
-    Openload, // openload.co
-    VVVVID;   // vvvvid.it
+    Openload,   // openload.co
+    VVVVID,     // vvvvid.it
+    Streamango  // streamango.com
+    ;
 
     /**
      * Returns the provider associated with the given url or null if the
@@ -31,6 +34,8 @@ public enum  VideoProvider {
             return Openload;
         if (url.contains("vvvvid"))
             return VVVVID;
+        if (url.contains("streamango"))
+            return Streamango;
 
         return null;
     }
@@ -43,7 +48,7 @@ public enum  VideoProvider {
      * @param driverPath the path of the chrome driver
      * @param ghostMode whether the chrome driver should be started in ghost mode
      * @param downloadObserver the observer of the download
-     * @return
+     * @return the appropriate downloader for this provider
      */
     public ChromeMarionetteDownloader createDownloader(
         String downloadUrl,
@@ -52,17 +57,24 @@ public enum  VideoProvider {
         boolean ghostMode,
         VideoDownloadObserver downloadObserver
     ) {
-        if (this == Openload)
+        switch (this) {
+        case Openload:
             return new OpenloadMarionette(
                 downloadUrl, downloadFolder,
                 driverPath, ghostMode,
                 downloadObserver);
-        if (this == VVVVID)
+        case VVVVID:
             return new VVVVIDMarionette(
                 downloadUrl, downloadFolder,
                 driverPath, ghostMode,
-                downloadObserver
-            );
+                downloadObserver);
+        case Streamango:
+            return new StreamangoMarionette(
+                downloadUrl, downloadFolder,
+                driverPath, ghostMode,
+                downloadObserver);
+        }
+
         return null;
     }
 
@@ -71,10 +83,14 @@ public enum  VideoProvider {
      * @return the provider's logo
      */
     public Image getLogo() {
-        if (this == Openload)
+        switch (this) {
+        case Openload:
             return Resources.UI.OPENLOAD;
-        if (this == VVVVID)
+        case VVVVID:
             return Resources.UI.VVVVID;
+        case Streamango:
+            return Resources.UI.STREAMANGO;
+        }
         return null;
     }
 }
