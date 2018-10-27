@@ -247,4 +247,8 @@
     -fx-background-color: rgba(8, 110, 68, 0.72);
 }
 
+.percentage-bar-background.aborted {
+    -fx-background-color: rgba(110, 59, 26, 0.72);
+}
+
 /* SPECIFIC STUFF - END */

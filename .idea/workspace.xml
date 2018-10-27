@@ -10,27 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="103af4ae-315e-44b1-bfc7-764ffddab6d6" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.4/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.4/taskHistory/taskHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/AnimeDownloaderJar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/AnimeDownloaderJar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings/chrome_driver_ghost_mode" beforeDir="false" afterPath="$PROJECT_DIR$/settings/chrome_driver_ghost_mode" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/constants/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/constants/Config.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/ChromeMarionetteDownloader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/ChromeMarionetteDownloader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/VideoFileMarionette.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/VideoFileMarionetteDownloader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/openload/OpenloadMarionette.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/openload/OpenloadMarionette.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/streamango/StreamangoMarionette.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/streamango/StreamangoMarionette.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/vvvvid/VVVVIDMarionette.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/vvvvid/VVVVIDMarionette.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/main/MainWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/main/MainWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/main/MainWindowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/main/MainWindowController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/settings/SettingsWindowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/settings/SettingsWindowController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/video/VideoRowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/video/VideoRowController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/video/VideoInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/video/DownloadableVideoInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/main_window.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/main_window.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings/download_automatically" beforeDir="false" afterPath="$PROJECT_DIR$/settings/download_automatically" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -126,11 +107,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainWindowController.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MainWindowController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/main/MainWindowController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="117">
-              <caret line="281" selection-start-line="281" selection-end-line="281" />
+            <state relative-caret-position="145">
+              <caret line="291" column="30" selection-start-line="291" selection-start-column="30" selection-end-line="291" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TODO" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/TODO">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="2" selection-start-column="2" selection-end-column="2" />
             </state>
           </provider>
         </entry>
@@ -148,7 +138,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>Saving video to cache with following details</find>
       <find>saveVideoToCache</find>
       <find>initDownloader</find>
       <find>isValid</find>
@@ -178,6 +167,7 @@
       <find>uiPercentage</find>
       <find>&lt;</find>
       <find>check</find>
+      <find>checkFor</find>
     </findStrings>
     <replaceStrings>
       <replace>Const.M</replace>
@@ -586,7 +576,6 @@
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/openload/OpenloadMarionette.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/VideoFileMarionette.java" />
         <option value="$PROJECT_DIR$/src/main/resources/css/style.css" />
-        <option value="$PROJECT_DIR$/TODO" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/VideoDownloadObserver.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/ChromeMarionetteDownloader.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/streamango/StreamangoMarionette.java" />
@@ -605,6 +594,7 @@
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/vvvvid/VVVVIDMarionette.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/video/VideoRowController.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/main/MainWindowController.java" />
+        <option value="$PROJECT_DIR$/TODO" />
       </list>
     </option>
   </component>
@@ -621,10 +611,10 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="275" />
-    <option name="y" value="136" />
+    <option name="x" value="272" />
+    <option name="y" value="124" />
     <option name="width" value="1461" />
-    <option name="height" value="899" />
+    <option name="height" value="872" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
@@ -1032,16 +1022,15 @@
       <workItem from="1540563878981" duration="254000" />
       <workItem from="1540584907004" duration="3431000" />
       <workItem from="1540594068297" duration="4583000" />
-      <workItem from="1540624893124" duration="10903000" />
+      <workItem from="1540624893124" duration="11235000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="146961000" />
+    <option name="totallyTimeSpent" value="147293000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="275" y="136" width="1461" height="899" extended-state="0" />
-    <editor active="true" />
+    <frame x="138" y="117" width="1461" height="899" extended-state="0" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
@@ -1060,10 +1049,10 @@
       <window_info anchor="right" id="Palette&#9;" order="4" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="5" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.3251928" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.3251928" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32914573" />
-      <window_info anchor="bottom" id="Terminal" order="7" weight="0.26625767" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2903453" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.26606685" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2903453" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32822758" />
       <window_info anchor="right" id="Gradle" order="7" weight="0.33251634" />
       <window_info anchor="right" id="Theme Preview" order="6" />
@@ -1202,13 +1191,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1445">
           <caret line="102" column="13" selection-start-line="102" selection-start-column="13" selection-end-line="102" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TODO">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="3" column="70" selection-start-line="3" selection-start-column="70" selection-end-line="3" selection-end-column="70" />
         </state>
       </provider>
     </entry>
@@ -1474,8 +1456,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/main/MainWindowController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret line="281" selection-start-line="281" selection-end-line="281" />
+        <state relative-caret-position="145">
+          <caret line="291" column="30" selection-start-line="291" selection-start-column="30" selection-end-line="291" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TODO">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="2" selection-start-column="2" selection-end-column="2" />
         </state>
       </provider>
     </entry>
