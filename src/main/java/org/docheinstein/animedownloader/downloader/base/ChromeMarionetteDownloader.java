@@ -16,7 +16,7 @@ import java.util.logging.Level;
  * Entity that represents a download of video that use {@link WebDriver}
  * to retrieve video info/link, more specifically a Chrome Driver.
  */
-public abstract class ChromeMarionetteDownloader implements Downloader {
+public abstract class ChromeMarionetteDownloader implements VideoDownloader {
 
     private static final DocLogger L =
         DocLogger.createForClass(ChromeMarionetteDownloader.class);
@@ -54,7 +54,7 @@ public abstract class ChromeMarionetteDownloader implements Downloader {
     /**
      * Initializes the marionette and thus the webdriver.
      */
-    public void initMarionette() {
+    public void initDriver() {
         System.setProperty(
             "webdriver.chrome.driver",
             mDriverPath.getAbsolutePath()

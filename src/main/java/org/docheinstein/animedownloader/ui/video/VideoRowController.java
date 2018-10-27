@@ -10,15 +10,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import org.docheinstein.animedownloader.downloader.base.VideoDownloader;
+import org.docheinstein.animedownloader.video.DownloadableVideoInfo;
 import org.docheinstein.commons.utils.javafx.FXUtil;
 import org.docheinstein.commons.utils.logger.DocLogger;
 import org.docheinstein.animedownloader.commons.constants.Resources;
-import org.docheinstein.animedownloader.downloader.base.Downloader;
 import org.docheinstein.animedownloader.downloader.base.VideoDownloadObserver;
 import org.docheinstein.animedownloader.settings.Settings;
 import org.docheinstein.animedownloader.ui.base.InstantiableController;
 import org.docheinstein.animedownloader.video.VideoProvider;
 import org.docheinstein.commons.utils.thread.ThreadUtil;
+import org.docheinstein.commons.utils.types.StringUtil;
 
 
 import java.awt.*;
@@ -57,14 +59,17 @@ public class VideoRowController
      * State of the video download.
      */
     public enum VideoDownloadState {
-        /** The video should still be downloaed.* */
+        /** The video should still be downloaded.* */
         ToDownload,
 
         /** The download of the video is in progress. */
         Downloading,
 
         /** The video has been download successfully. */
-        Downloaded
+        Downloaded,
+
+        /** The video began but has been aborted. */
+        Aborted
     }
 
     /** Current video state. */
@@ -76,14 +81,10 @@ public class VideoRowController
     /** Observers of this video row. */
     private final VideoRowObserver mObserver;
 
+    private DownloadableVideoInfo mVideoInfo;
+
     /** Link of the video to download. */
-    private final String mLink;
-
-    /** Title of the video (actually kept only for debug purpose). */
-    private String mTitle;
-
-    /** Size in byte of the video (kept for calculate the download progress). */
-    private long mVideoSize = 0;
+    private final String mUrl;
 
     /** Time of the last chunk download (kept for calculate the download speed). */
     private long mLastDownloadChunkMillis;
@@ -92,7 +93,7 @@ public class VideoRowController
     private long mLastDownloadChunkBytes = 0;
 
     /** Underlying download used for actually download the video.*/
-    private Downloader mDownloader;
+    private VideoDownloader mDownloader;
 
     /** Detected provider of the video to download. */
     private VideoProvider mProvider;
@@ -149,16 +150,24 @@ public class VideoRowController
         return "video_row.fxml";
     }
 
-    public VideoRowController(String link, String identifier,
+    public VideoRowController(String url, String identifier,
                               VideoRowObserver observer) {
-        mLink = link;
+        this(url, identifier, observer, null);
+    }
+
+
+    public VideoRowController(String url, String identifier,
+                              VideoRowObserver observer, DownloadableVideoInfo videoInfo) {
+        mUrl = url;
         mIdentifier = identifier;
         mObserver = observer;
+        mVideoInfo = videoInfo;
     }
+
 
     @FXML
     private void initialize() {
-        mProvider = VideoProvider.getProviderForURL(mLink);
+        mProvider = VideoProvider.getProviderForURL(mUrl);
 
         // Stuff initialized even if the provider is wrong
 
@@ -174,7 +183,7 @@ public class VideoRowController
         });
 
         // Link
-        uiLink.setText(mLink);
+        uiLink.setText(mUrl);
 
         if (mProvider == null) {
             L.warn("The pasted link doesn't belong to any valid provider");
@@ -191,7 +200,8 @@ public class VideoRowController
 
         // Start/Stop button
         uiStartStopOpen.setOnMouseClicked(event -> {
-            if (mCurrentVideoState == VideoDownloadState.ToDownload)
+            if (mCurrentVideoState == VideoDownloadState.ToDownload ||
+                mCurrentVideoState == VideoDownloadState.Aborted)
                 download();
             else if (mCurrentVideoState == VideoDownloadState.Downloading)
                 abortVideoDownload();
@@ -200,6 +210,10 @@ public class VideoRowController
         });
 
         updateMultiActionButton();
+
+        // Initializes video info if provided
+
+        initUIVideoInfo();
     }
 
 
@@ -231,14 +245,11 @@ public class VideoRowController
      * Starts the video download and changes the controller video state.
      */
     public void download() {
-        if (!hasValidProvider()) {
-            L.warn("Can't start video startDownload is provider is invalid");
-            return;
-        }
+        initDownloader();
 
         mCurrentVideoState = VideoDownloadState.Downloading;
 
-        L.debug("Going to seek for direct video link from URL: " + mLink);
+        L.debug("Going to seek for direct video link from URL: " + mUrl);
 
         // Don't let the user do something in this transactional phase
         uiStartStopOpen.setVisible(false);
@@ -246,17 +257,61 @@ public class VideoRowController
         uiPreDownloadSpinner.setVisible(true);
         uiPreDownloadSpinner.setManaged(true);
 
-        mDownloadFolder = Settings.instance().getDownloadFolderSetting().getValue();
+        // Use the given video info if provided instead of reload it
+        // This may be useful for skip the selenium step and directly
+        // download the video which information have already been retrieved
+        mDownloader.useVideoInfo(mVideoInfo);
 
-        mDownloader = mProvider.createDownloader(
-            mLink,
-            mDownloadFolder,
-            Settings.instance().getChromeDriverSetting().getValue(),
-            Settings.instance().getChromeDriverGhostModeSetting().getValue(),
-            VideoRowController.this
-        );
+        initUIVideoInfo();
 
         ThreadUtil.start(() -> mDownloader.startDownload());
+    }
+
+    /**
+     * Retrieves the video info.
+     * <p>
+     * The info is retrieved from the page, thus the selenium driver is
+     * used for perform the action.
+     * @return the video info
+     */
+    public DownloadableVideoInfo retrieveVideoInfo() {
+        initDownloader();
+        mVideoInfo = mDownloader.retrieveVideoInfo();
+        initUIVideoInfo();
+        return mVideoInfo;
+    }
+
+    private synchronized void initDownloader() {
+        if (!hasValidProvider()) {
+            L.warn("Can't start video download is provider is invalid");
+            return;
+        }
+
+        // Initializes if needed, only the first time
+        if (mDownloader == null) {
+            mDownloadFolder = Settings.instance().getDownloadFolderSetting().getValue();
+
+            mDownloader = mProvider.createDownloader(
+                mUrl,
+                mDownloadFolder,
+                Settings.instance().getChromeDriverSetting().getValue(),
+                Settings.instance().getChromeDriverGhostModeSetting().getValue(),
+                VideoRowController.this
+            );
+        }
+    }
+
+    /**
+     * Initializes the title and the size of the row accordingly to the
+     * current video info.
+     */
+    private void initUIVideoInfo() {
+        if (mVideoInfo != null) {
+            if (StringUtil.isValid(mVideoInfo.title))
+                onVideoTitleDetected(mVideoInfo.title);
+            if (mVideoInfo.size > 0)
+                onVideoSizeDetected(mVideoInfo.size, true);
+        }
     }
 
     /**
@@ -264,7 +319,7 @@ public class VideoRowController
      */
     private void abortVideoDownload() {
         if (mDownloader == null) {
-            L.warn("Can't abort startDownload since it is not started yet!");
+            L.warn("Can't abort download since it is not started yet!");
             return;
         }
 
@@ -278,6 +333,9 @@ public class VideoRowController
         ThreadUtil.start(() -> {
             try {
                 if (Desktop.isDesktopSupported()) {
+                    // mDownloadFolder is kept instead of retrieving the
+                    // path from setting since the setting could have been changed
+                    // after the video download
                     L.debug("Trying to open " + mDownloadFolder
                         + " via default file explorer");
                     Desktop.getDesktop().open(mDownloadFolder);
@@ -294,12 +352,13 @@ public class VideoRowController
      * Updates the open/start/stop button accordingly to the current video state.
      */
     private void updateMultiActionButton() {
-        if (mCurrentVideoState == VideoDownloadState.ToDownload) {
+        if (mCurrentVideoState == VideoDownloadState.ToDownload ||
+            mCurrentVideoState == VideoDownloadState.Aborted) {
             Tooltip.install(uiStartStopOpen, new Tooltip("Download"));
             uiStartStopOpenImage.setImage(Resources.UI.START);
         }
         else if (mCurrentVideoState == VideoDownloadState.Downloading) {
-            Tooltip.install(uiStartStopOpen, new Tooltip("Stop startDownload"));
+            Tooltip.install(uiStartStopOpen, new Tooltip("Stop download"));
             uiStartStopOpenImage.setImage(Resources.UI.STOP);
         }
         else if (mCurrentVideoState == VideoDownloadState.Downloaded) {
@@ -310,7 +369,7 @@ public class VideoRowController
 
     @Override
     public void onVideoDownloadStarted() {
-        L.info("Download of " + mTitle + " is started");
+        L.info("Download of " + mVideoInfo.title + " is started");
         mLastDownloadChunkMillis = System.currentTimeMillis();
         Platform.runLater(() -> {
             uiDownloadInfo.setVisible(true);
@@ -318,6 +377,10 @@ public class VideoRowController
             uiPreDownloadSpinner.setManaged(false);
             uiStartStopOpen.setVisible(true);
             uiStartStopOpen.setManaged(true);
+
+            // Removes any style (in case of resumed download the bar was orange)
+            FXUtil.setClass(uiPercentage, "percentage-bar-background");
+
             updateMultiActionButton();
         });
     }
@@ -330,7 +393,7 @@ public class VideoRowController
             return;
         }
 
-        L.verbose("Downloaded bytes: " + downloadedBytes + " of " + mVideoSize);
+        L.verbose("Downloaded bytes: " + downloadedBytes + " of " + mVideoInfo.size);
 
         long deltaMillis = millis - mLastDownloadChunkMillis;
         long deltaBytes = downloadedBytes - mLastDownloadChunkBytes;
@@ -345,14 +408,14 @@ public class VideoRowController
 
         L.verbose("KB/s = dt/dbytes = " + kilobytesPerSecond);
 
-        double rateo = (double) downloadedBytes / (double) mVideoSize;
+        double rateo = (double) downloadedBytes / (double) mVideoInfo.size;
         double percentage = rateo * 100;
 
         L.verbose("Download percentage = " + String.format("%1$,.2f", percentage) + "%");
 
         double parentWidth = uiRoot.getWidth();
         double percentageBarWidth = parentWidth *
-            /* rateo */ (double) downloadedBytes / (double) mVideoSize;
+            /* rateo */ (double) downloadedBytes / (double) mVideoInfo.size;
 
         Platform.runLater(() -> {
             uiCurrent.setText(String.valueOf(downloadedBytes / M));
@@ -362,9 +425,13 @@ public class VideoRowController
             double newPercentageBarAnchor = parentWidth - percentageBarWidth;
 
             // Progress bar should always go forward
-            Double rightAnchor = AnchorPane.getRightAnchor(uiPercentage);
+            // Double rightAnchor = AnchorPane.getRightAnchor(uiPercentage);
 
-            if (rightAnchor == null || newPercentageBarAnchor < rightAnchor)
+            // if (rightAnchor == null
+                // Allow negative progress in case of resumed download
+                // that doesn't support resume (VVVVID)
+                /*|| newPercentageBarAnchor < rightAnchor*/
+            //    )
                 AnchorPane.setRightAnchor(
                     uiPercentage,
                     parentWidth - percentageBarWidth
@@ -374,11 +441,11 @@ public class VideoRowController
 
     @Override
     public void onVideoDownloadFinished() {
-        L.info("Download of " + mTitle + " is finished");
+        L.info("Download of " + mVideoInfo.title + " is finished");
         mCurrentVideoState = VideoDownloadState.Downloaded;
 
         Platform.runLater(() -> {
-            uiCurrent.setText(String.valueOf(mVideoSize / M));
+            uiCurrent.setText(String.valueOf(mVideoInfo.size / M));
 
             uiSpeedContainer.setVisible(false);
             updateMultiActionButton();
@@ -393,27 +460,34 @@ public class VideoRowController
 
     @Override
     public void onVideoDownloadAborted() {
-        L.info("Download of " + mTitle + " has been aborted");
+        L.info("Download of " + mVideoInfo.title + " has been aborted");
 
-        mCurrentVideoState = VideoDownloadState.ToDownload;
+        mCurrentVideoState = VideoDownloadState.Aborted;
 
         Platform.runLater(() -> {
-            uiDownloadInfo.setVisible(false);
-            AnchorPane.setRightAnchor(uiPercentage, null);
+            // Still show the download info since the file is still on the disk
+            // uiDownloadInfo.setVisible(false);
+            // AnchorPane.setRightAnchor(uiPercentage, null);
+            FXUtil.addClass(uiPercentage, "aborted");
+
             updateMultiActionButton();
         });
     }
 
     @Override
     public void onVideoTitleDetected(String title) {
-        mTitle = title;
+        if (mVideoInfo == null)
+            mVideoInfo = new DownloadableVideoInfo();
+        mVideoInfo.title = title;
         Platform.runLater(() -> uiTitle.setText(title));
     }
 
     @Override
     public void onVideoSizeDetected(long videoSizeBytes, boolean certainly) {
-        mVideoSize = videoSizeBytes;
-        final String videoSizeString = String.valueOf(mVideoSize / M);
+        if (mVideoInfo == null)
+            mVideoInfo = new DownloadableVideoInfo();
+        mVideoInfo.size = videoSizeBytes;
+        final String videoSizeString = String.valueOf(mVideoInfo.size / M);
 
         Platform.runLater(() ->
             uiSize.setText(
@@ -432,7 +506,7 @@ public class VideoRowController
             return;
         }
 
-        L.debug("Notifying observer about startDownload end");
+        L.debug("Notifying observer about download end");
 
         mObserver.onDownloadEnd(this);
     }

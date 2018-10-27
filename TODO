@@ -1,0 +1,4 @@
+1) Add an option for retrieve the video name on paste (instead of in download)
+2) Let the user reorder the rows of the video which download is not started yet
+3) Resume aborted download
+4) On open detect the file length and set the progress bar accordingly

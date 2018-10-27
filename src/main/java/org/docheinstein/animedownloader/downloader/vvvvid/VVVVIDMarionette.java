@@ -8,7 +8,7 @@ import org.docheinstein.animedownloader.downloader.base.ChromeMarionetteDownload
 import org.docheinstein.animedownloader.downloader.base.VideoDownloadObserver;
 import org.docheinstein.animedownloader.settings.Settings;
 import org.docheinstein.animedownloader.ui.alert.AlertInstance;
-import org.docheinstein.animedownloader.video.VideoInfo;
+import org.docheinstein.animedownloader.video.DownloadableVideoInfo;
 import org.docheinstein.commons.utils.file.FileUtil;
 import org.docheinstein.commons.utils.http.HttpDownloader;
 import org.docheinstein.commons.utils.http.HttpRequester;
@@ -40,7 +40,7 @@ public class VVVVIDMarionette
     private boolean mDownloadEnabled;
 
     /** Video info container. */
-    private final VideoInfo mVideoInfo = new VideoInfo();
+    private DownloadableVideoInfo mVideoInfo;
 
     /** Amount of downloaded bytes. */
     private long mDownloadedBytes = 0;
@@ -60,31 +60,9 @@ public class VVVVIDMarionette
     public void startDownload() {
         mDownloadEnabled = true;
 
-        if (!isInitialized())
-            initMarionette();
+        initMarionette();
 
-        mDriver.get(mDownloadUrl);
-
-        passRobotCheck();
-
-        skipAds();
-
-        mVideoInfo.title = retrieveVideoTitle();
-        notifyTitleToObserver(mVideoInfo);
-
-        // Replaces bad characters with _
-        mVideoInfo.filename = mVideoInfo.title.replaceAll("\\W+", "_");
-
-        String indexLink = getIndexFileLink();
-
-        if (!StringUtil.isValid(indexLink)) {
-            L.error("Index link can't be retrieved from network logs; giving up");
-            return;
-        }
-
-        mDriver.quit();
-
-        String indexContent = getIndexContent(indexLink);
+        String indexContent = getIndexContent(mVideoInfo.directLink);
 
         if (!StringUtil.isValid(indexContent)) {
             L.error("Index content is invalid; giving up");
@@ -129,14 +107,74 @@ public class VVVVIDMarionette
             mObserver.onVideoDownloadAborted();
 
         mDownloadEnabled = false;
+        mDownloadedBytes = 0;
+        mSegmentIncrementalNumber = 1;
     }
+
+
+    @Override
+    public DownloadableVideoInfo retrieveVideoInfo() {
+        initMarionette();
+        return mVideoInfo;
+    }
+
+    @Override
+    public void useVideoInfo(DownloadableVideoInfo videoInfo) {
+        mVideoInfo = videoInfo;
+    }
+
+    /**
+     * Initializes the underlying driver and actually retrieved the video info
+     * without starting the download.
+     * <p>
+     * This method is thread-safe.
+     */
+    private synchronized void initMarionette() {
+        if (mVideoInfo == null) {
+            if (!isInitialized())
+                initDriver();
+
+            mDriver.get(mDownloadUrl);
+
+            passRobotCheck();
+
+            skipAds();
+
+            mVideoInfo = new DownloadableVideoInfo();
+
+            mVideoInfo.title = mDriver.findElement(
+                By.className("player-info-show")).getText();
+
+            // Replaces bad characters with _
+            mVideoInfo.filename = mVideoInfo.title.replaceAll("\\W+", "_");
+
+            // Retrieves index file link and use it as direct link
+            String directLink =  getIndexFileLink();
+
+            if (!StringUtil.isValid(directLink)) {
+                L.error("Index link can't be retrieved from network logs; error will occur");
+                mDriver.quit();
+                return;
+            }
+
+            String normalizedindexLink = directLink.replaceFirst("\\?null=0", "");
+            L.debug("Going to retrieve content of index file from " + normalizedindexLink);
+
+            mVideoInfo.directLink = normalizedindexLink;
+
+            mDriver.quit();
+        } else {
+            L.debug("Skipping marionette initialization since video info is not null");
+        }
+
+    }
+
 
     /**
      * Passes the robot check by clicking on the #apCheckContainer element.
      */
     private void passRobotCheck() {
-        if (!mDownloadEnabled)
-            return;
+        L.debug("Trying to pass robot check");
 
         WebElement robotChecker = mDriver.findElement(By.id("apCheckContainer"));
         if (robotChecker != null) {
@@ -155,12 +193,18 @@ public class VVVVIDMarionette
      * faster.
      */
     private void skipAds() {
-        final int MAX_ATTEMPTS = 20;
-        final int ESTIMATED_LOAD_MILLIS = 5000;
+        L.debug("Going to skip VVVVID ads");
 
-        for (int attemptCount = 1; attemptCount <= MAX_ATTEMPTS && mDownloadEnabled; attemptCount++) {
-            L.debug("Loading attempt [" + attemptCount + "]");
-            ThreadUtil.sleep(ESTIMATED_LOAD_MILLIS);
+        final int MAX_ATTEMPTS = 20;
+
+        int estimatedLoadMillis = 5000;
+
+        // Increase the estimated load time after each attempt
+
+        for (int attemptCount = 1; attemptCount <= MAX_ATTEMPTS; attemptCount++) {
+            L.debug("Loading attempt [" + attemptCount + "] - sleeping for " + estimatedLoadMillis);
+
+            ThreadUtil.sleep(estimatedLoadMillis);
 
             WebElement playerInfoShow = null;
             try {
@@ -170,19 +214,15 @@ public class VVVVIDMarionette
 
             // The last refresh didn't lead to ads
             if (playerInfoShow != null)
-                return;
+                return; // Ads skipped
 
             L.debug("Ads have been loaded, trying to refresh for skip those");
             mDriver.navigate().refresh();
-        }
-    }
 
-    /**
-     * Retrieves the video title from the page.
-     * @return the video title
-     */
-    private String retrieveVideoTitle() {
-        return mDriver.findElement(By.className("player-info-show")).getText();
+            estimatedLoadMillis = (int) (estimatedLoadMillis * 1.15);
+            // 1.15 Seems a decent factor
+            // After 20 iterations from 5000ms it goes to 81832ms (5000 * 1.15^20).
+        }
     }
 
     /**
@@ -191,9 +231,6 @@ public class VVVVIDMarionette
      * @return the url of the segments index file
      */
     private String getIndexFileLink() {
-        if (!mDownloadEnabled)
-            return null;
-
         L.debug("Seeking for index file url");
         LogEntries logEntries = mDriver.manage().logs().get(LogType.PERFORMANCE);
         Gson gson = new Gson();
@@ -273,10 +310,7 @@ public class VVVVIDMarionette
         if (!mDownloadEnabled)
             return null;
 
-        String normalizedindexLink = indexLink.replaceFirst("\\?null=0", "");
-        L.debug("Going to retrieve content of index file from " + normalizedindexLink);
-
-        HttpRequester.Response response = HttpRequester.get(normalizedindexLink).send();
+        HttpRequester.Response response = HttpRequester.get(indexLink).send();
 
         if (!response.hasBeenPerformed()) {
             L.error("Index file can't be retrieved");
@@ -331,9 +365,11 @@ public class VVVVIDMarionette
             mObserver.onVideoDownloadStarted();
 
         for (String segmentLink : segmentLinks) {
+
             if (!mDownloadEnabled) {
                 L.debug("Download has been aborted");
                 return false;
+                // Does not fire onVideoDownloadFinished()
             }
 
             L.debug("Downloading segment: " + segmentLink);
@@ -343,37 +379,38 @@ public class VVVVIDMarionette
             try {
                 File segmentOutputFile  = new File(segmentsFolder, segmentFilename);
 
-                new HttpDownloader().download(
+                boolean downloaded = new HttpDownloader().download(
                     segmentLink,
-                    segmentOutputFile.getAbsolutePath(),
-                    downloadedBytes -> {
-                        long curMillis = System.currentTimeMillis();
-
-                        mDownloadedBytes += segmentOutputFile.length();
-
-                        int remainingSegmentCount = segmentCount - mSegmentIncrementalNumber;
-
-                        L.verbose("Downloaded segment is " + segmentOutputFile.length() + " bytes");
-                        L.verbose("Already downloaded bytes are so " + mDownloadedBytes);
-                        long estimatedVideoSize =
-                            remainingSegmentCount * (mDownloadedBytes / mSegmentIncrementalNumber)
-                                + mDownloadedBytes;
-
-                        L.verbose("Estimated video size: " + estimatedVideoSize);
-
-                        mVideoInfo.size = estimatedVideoSize;
-
-                        notifySizeToObserver(mVideoInfo);
-
-                        if (mObserver != null)
-                            mObserver.onVideoDownloadProgress(mDownloadedBytes, curMillis);
-                    },
-                    Integer.MAX_VALUE
+                    segmentOutputFile.getAbsolutePath()
                 );
 
+                if (downloaded) {
+                    long curMillis = System.currentTimeMillis();
+
+                    mDownloadedBytes += segmentOutputFile.length();
+
+                    int remainingSegmentCount = segmentCount - mSegmentIncrementalNumber;
+
+                    L.verbose("Downloaded segment is " + segmentOutputFile.length() + " bytes");
+                    L.verbose("Already downloaded bytes are so " + mDownloadedBytes);
+                    long estimatedVideoSize =
+                        remainingSegmentCount * (mDownloadedBytes / mSegmentIncrementalNumber)
+                            + mDownloadedBytes;
+
+                    L.verbose("Estimated video size: " + estimatedVideoSize);
+
+                    mVideoInfo.size = estimatedVideoSize;
+
+                    notifySizeToObserver(mVideoInfo);
+
+                    if (mObserver != null)
+                        mObserver.onVideoDownloadProgress(mDownloadedBytes, curMillis);
+                } else {
+                    L.error("Segment download has failed, something bad will happen");
+                }
 
             } catch (IOException e) {
-                L.error("Segment startDownload failed!");
+                L.error("Segment download failed!");
                 return false;
             }
 
@@ -457,7 +494,7 @@ public class VVVVIDMarionette
      * Notifies the observes about the new video title.
      * @param videoInfo the title info to notify
      */
-    private void notifyTitleToObserver(VideoInfo videoInfo) {
+    private void notifyTitleToObserver(DownloadableVideoInfo videoInfo) {
         L.debug("Video title detected: " + videoInfo.title);
         if (mObserver != null)
             mObserver.onVideoTitleDetected(videoInfo.title);
@@ -467,7 +504,7 @@ public class VVVVIDMarionette
      * Notifies the observes about the new video size.
      * @param videoInfo the size info to notify
      */
-    private void notifySizeToObserver(VideoInfo videoInfo) {
+    private void notifySizeToObserver(DownloadableVideoInfo videoInfo) {
         L.debug("Estimated video size: " + videoInfo.size / M + "MB");
         if (mObserver != null)
             mObserver.onVideoSizeDetected(videoInfo.size, false);

@@ -1,8 +1,8 @@
 package org.docheinstein.animedownloader.downloader.streamango;
 
 import org.docheinstein.animedownloader.downloader.base.VideoDownloadObserver;
-import org.docheinstein.animedownloader.downloader.base.VideoFileMarionette;
-import org.docheinstein.animedownloader.video.VideoInfo;
+import org.docheinstein.animedownloader.downloader.base.VideoFileMarionetteDownloader;
+import org.docheinstein.animedownloader.video.DownloadableVideoInfo;
 import org.docheinstein.commons.utils.http.HttpRequester;
 import org.docheinstein.commons.utils.logger.DocLogger;
 import org.docheinstein.commons.utils.types.StringUtil;
@@ -16,7 +16,7 @@ import java.io.File;
 /**
  * Specific marionette able to download video from "https://streamango.com".
  */
-public class StreamangoMarionette extends VideoFileMarionette {
+public class StreamangoMarionette extends VideoFileMarionetteDownloader {
 
     private static final DocLogger L =
         DocLogger.createForClass(StreamangoMarionette.class);
@@ -64,20 +64,20 @@ public class StreamangoMarionette extends VideoFileMarionette {
     }
 
     @Override
-    public VideoInfo getVideoInfo(HttpRequester.Response headResponse) {
-        VideoInfo videoInfo = new VideoInfo();
+    public DownloadableVideoInfo getVideoInfo(HttpRequester.Response headResponse) {
+        DownloadableVideoInfo videoInfo = new DownloadableVideoInfo();
 
         // Size
 
         videoInfo.size = headResponse.getContentLength();
 
-        // Filename
+        // Filename & Title
 
-        String videoTitle = mDriver.findElement(By.className("page-title")).getAttribute("textContent");
+        String videoTitle = mDriver.findElement(
+            By.className("page-title")).getAttribute("textContent");
 
         if (StringUtil.isValid(videoTitle)) {
             videoInfo.filename = videoInfo.title = videoTitle.trim();
-
         }
 
         mDriver.quit();

@@ -10,18 +10,24 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.docheinstein.animedownloader.settings.Settings;
 import org.docheinstein.animedownloader.ui.base.InstantiableController;
+import org.docheinstein.animedownloader.video.DownloadableVideoInfo;
 import org.docheinstein.commons.utils.file.FileUtil;
+import org.docheinstein.commons.utils.file.KeyValueFileHandler;
 import org.docheinstein.commons.utils.javafx.FXUtil;
 import org.docheinstein.commons.utils.logger.DocLogger;
 import org.docheinstein.animedownloader.commons.constants.Config;
 import org.docheinstein.animedownloader.ui.settings.SettingsWindowController;
 import org.docheinstein.animedownloader.ui.video.VideoRowController;
+import org.docheinstein.commons.utils.thread.ThreadUtil;
+import org.docheinstein.commons.utils.types.StringUtil;
 
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -111,47 +117,57 @@ public class MainWindowController
     private void handlePaste() {
         L.debug("Detected CTRL + V");
 
-        String url = null;
-
         try {
-            url = (String) Toolkit.getDefaultToolkit()
+            String url = (String) Toolkit.getDefaultToolkit()
                 .getSystemClipboard()
                 .getContents(DataFlavor.stringFlavor)
                 .getTransferData(DataFlavor.stringFlavor);
+
+
+            String identifier = String.valueOf(System.currentTimeMillis());
+            VideoRowController rowController = addVideoToDownloadList(identifier, url, null);
+
+            if (rowController.hasValidProvider()) {
+
+                // Automatically retrieves the video info and stores it
+                ThreadUtil.start(() -> {
+                    DownloadableVideoInfo videoInfo = rowController.retrieveVideoInfo();
+
+                    saveVideoToCache(identifier, url, videoInfo);
+
+                    // Starts the next possible video, if needed
+                    checkForNextVideoToDownload();
+                });
+            }
+
         } catch (UnsupportedFlavorException | IOException e) {
             L.error("Error occurred while trying to copy data from system clipboard", e);
         }
 
-        if (url != null) {
-            String identifier = String.valueOf(System.currentTimeMillis());
-            boolean validProvider = addVideoToDownloadList(identifier, url);
-            if (validProvider)
-                saveVideoToCache(identifier, url);
-        }
-        else
-            L.warn("Detected null URL, nothing to do");
     }
 
     /**
      * Adds the video row for the given url and identifier.
      * @param identifier the identifier of the video row
      * @param url the url of the video
-     * @return whether the inserted video row belong to a valid provider
+     * @param videoInfo additional video info used for initialize the video row
+     * @return the controller of the added row
      */
-    private boolean addVideoToDownloadList(String identifier, String url) {
+    private VideoRowController addVideoToDownloadList(
+        String identifier, String url, DownloadableVideoInfo videoInfo) {
         L.info("Adding video [" + identifier + "] with URL: " + url);
 
-        VideoRowController videoController = new VideoRowController(url, identifier, this);
+        VideoRowController videoController = new VideoRowController(
+            url, identifier, this, videoInfo
+        );
+
         Node videoRow = videoController.createNode();
 
         mVideoRows.put(videoController, videoRow);
 
         uiDownloadList.getItems().add(videoRow);
 
-        if (videoController.hasValidProvider())
-            checkForNextVideoToDownload();
-
-        return videoController.hasValidProvider();
+        return videoController;
     }
 
     /**
@@ -159,9 +175,10 @@ public class MainWindowController
      */
     private void loadVideosFromCache() {
         File[] videos = Config.Folders.VIDEOS.listFiles();
-
         if (videos == null)
             return;
+
+        Arrays.sort(videos);
 
         if (videos.length == 0) {
             L.debug("No video to load from cache");
@@ -170,7 +187,23 @@ public class MainWindowController
 
         for (File video : videos) {
             L.debug("Loading video from cache with identifier: " + video.getName());
-            addVideoToDownloadList(video.getName(), FileUtil.readFile(video));
+
+            Map<String, String> videoKeyVals = new KeyValueFileHandler(
+                video, Config.VideoCache.SEPARATOR
+            ).readAll();
+
+            DownloadableVideoInfo videoInfo = new DownloadableVideoInfo();
+
+            videoInfo.title = videoKeyVals.get(Config.VideoCache.KEY_TITLE);
+            videoInfo.filename = videoKeyVals.get(Config.VideoCache.KEY_FILENAME);
+            videoInfo.directLink = videoKeyVals.get(Config.VideoCache.KEY_DIRECT_LINK);
+
+            String sizeStr = videoKeyVals.get(Config.VideoCache.KEY_SIZE);
+            videoInfo.size = StringUtil.isValid(sizeStr) ? Long.valueOf(sizeStr) : 0;
+
+            String url = videoKeyVals.get(Config.VideoCache.KEY_URL);
+
+            addVideoToDownloadList(video.getName(), url, videoInfo);
         }
     }
 
@@ -178,10 +211,34 @@ public class MainWindowController
      * Saves the video to the file system.
      * @param identifier the identifier of the video, used as filename
      * @param url the url of the video, used as file's content
+     * @param videoInfo other video info
      */
-    private void saveVideoToCache(String identifier, String url) {
-        L.debug("Saving video to cache with identifier: " + identifier);
-        FileUtil.write(new File(Config.Folders.VIDEOS, identifier), url);
+    private void saveVideoToCache(String identifier, String url,
+                                  DownloadableVideoInfo videoInfo) {
+        L.debug("Saving video to cache with following details\n" +
+                "[ID] " + identifier + "\n" +
+                "[URL] " + url + "\n" +
+                videoInfo
+        );
+
+        File outputFile = new File(Config.Folders.VIDEOS, identifier);
+
+        if (FileUtil.exists(outputFile)) {
+            L.warn("Video already exists in cache; are you tyring to download the same video twice?");
+            return;
+        }
+
+        Map<String, String> keyvals = new HashMap<>();
+        keyvals.put(Config.VideoCache.KEY_URL, url);
+        keyvals.put(Config.VideoCache.KEY_TITLE, videoInfo.title);
+        keyvals.put(Config.VideoCache.KEY_FILENAME, videoInfo.filename);
+        keyvals.put(Config.VideoCache.KEY_DIRECT_LINK, videoInfo.directLink);
+        keyvals.put(Config.VideoCache.KEY_SIZE, String.valueOf(videoInfo.size));
+
+        new KeyValueFileHandler(
+            outputFile,
+            Config.VideoCache.SEPARATOR
+        ).writeAll(keyvals);
     }
 
     /**
@@ -200,7 +257,7 @@ public class MainWindowController
     private void checkForNextVideoToDownload() {
         // Automatically start the first available video if required
         if (!Settings.instance().getDownloadAutomaticallySetting().getValue()) {
-            L.debug("Automatic startDownload disabled, nothing to start");
+            L.debug("Automatic download disabled, nothing to start");
             return;
         }
 
@@ -213,8 +270,8 @@ public class MainWindowController
 
         int downloadLimit  = Settings.instance().getSimultaneousVideoLimitSetting().getValue();
 
-        L.debug("There are " + inDownloadCount + " video in startDownload");
-        L.debug("The startDownload limit is "+ downloadLimit);
+        L.debug("There are " + inDownloadCount + " video in download");
+        L.debug("The download limit is "+ downloadLimit);
 
         if (inDownloadCount >= downloadLimit) {
             L.debug("Video won't be started automatically since it would exceed the limit");
@@ -226,13 +283,13 @@ public class MainWindowController
         for (Map.Entry<VideoRowController, Node> row : mVideoRows.entrySet()) {
             VideoRowController video = row.getKey();
             if (video.getState() == VideoRowController.VideoDownloadState.ToDownload) {
-                L.debug("Found video still to startDownload, automatically downloading it");
+                L.debug("Found video still to download, automatically downloading it");
                 video.download();
                 return;
             }
         }
 
-        L.debug("No video to startDownload found, doing nothing");
+        L.debug("No video to download found, doing nothing");
     }
 
     @Override

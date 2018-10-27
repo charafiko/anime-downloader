@@ -1,15 +1,12 @@
 package org.docheinstein.animedownloader.downloader.openload;
 
-import org.docheinstein.animedownloader.downloader.base.VideoFileMarionette;
-import org.docheinstein.commons.utils.file.FileUtil;
-import org.docheinstein.commons.utils.http.HttpDownloader;
+import org.docheinstein.animedownloader.downloader.base.VideoFileMarionetteDownloader;
 import org.docheinstein.commons.utils.http.HttpRequester;
 import org.docheinstein.commons.utils.logger.DocLogger;
 import org.docheinstein.commons.utils.types.StringUtil;
 
-import org.docheinstein.animedownloader.downloader.base.ChromeMarionetteDownloader;
 import org.docheinstein.animedownloader.downloader.base.VideoDownloadObserver;
-import org.docheinstein.animedownloader.video.VideoInfo;
+import org.docheinstein.animedownloader.video.DownloadableVideoInfo;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -20,12 +17,10 @@ import java.io.*;
 import java.util.List;
 import java.util.Map;
 
-import static org.docheinstein.animedownloader.commons.constants.Const.Math.M;
-
 /**
  * Specific marionette able to download video from "https://openload.co".
  */
-public class OpenloadMarionette extends VideoFileMarionette {
+public class OpenloadMarionette extends VideoFileMarionetteDownloader {
 
     private static final DocLogger L =
         DocLogger.createForClass(OpenloadMarionette.class);
@@ -108,8 +103,8 @@ public class OpenloadMarionette extends VideoFileMarionette {
     }
 
     @Override
-    public VideoInfo getVideoInfo(HttpRequester.Response headResponse) {
-        VideoInfo videoInfo = new VideoInfo();
+    public DownloadableVideoInfo getVideoInfo(HttpRequester.Response headResponse) {
+        DownloadableVideoInfo videoInfo = new DownloadableVideoInfo();
 
         Map<String, List<String>> headerFields = headResponse.getHeaderFields();
 

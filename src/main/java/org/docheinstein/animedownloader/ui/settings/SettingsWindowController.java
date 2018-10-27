@@ -128,15 +128,15 @@ public class SettingsWindowController implements InstantiableController {
      */
     private void openDownloadDirectoryChooser() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        directoryChooser.setTitle("Select startDownload folder");
+        directoryChooser.setTitle("Select download folder");
         File dir = directoryChooser.showDialog(uiRoot.getScene().getWindow());
 
         if (!FileUtil.exists(dir)) {
-            L.warn("Invalid startDownload folder has been selected; it won't be changed");
+            L.warn("Invalid download folder has been selected; it won't be changed");
             return;
         }
 
-        L.debug("Changing startDownload folder to: " + dir.getAbsolutePath());
+        L.debug("Changing download folder to: " + dir.getAbsolutePath());
 
         setCurrentDownloadFolderValue(dir.getAbsolutePath());
     }

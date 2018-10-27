@@ -80,4 +80,13 @@ public class Config {
                 CHROME_DRIVER = null;
         }
     }
+
+    public static class VideoCache {
+        public static final String SEPARATOR = "=%=%="; // '=' is too common
+        public static final String KEY_URL =    "URL";
+        public static final String KEY_TITLE =  "TITLE";
+        public static final String KEY_FILENAME =  "FILENAME";
+        public static final String KEY_DIRECT_LINK =  "DIRECT_LINK";
+        public static final String KEY_SIZE =  "SIZE";
+    }
 }
