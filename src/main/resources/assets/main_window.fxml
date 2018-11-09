@@ -32,7 +32,26 @@
                         <Font name="Carlito Bold" size="26.0" />
                      </font>
                   </Label>
-                  <Button fx:id="uiSettings" mnemonicParsing="false">
+                  <Button fx:id="uiPaste" mnemonicParsing="false">
+                     <graphic>
+                        <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/paste.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <styleClass>
+                        <String fx:value="btn-midnight" />
+                        <String fx:value="glow-on-hover" />
+                     </styleClass>
+                     <tooltip>
+                        <Tooltip text="Paste link" />
+                     </tooltip>
+                     <HBox.margin>
+                        <Insets right="12.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button fx:id="uiSettings" layoutX="704.0" layoutY="10.0" mnemonicParsing="false">
                      <graphic>
                         <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                            <image>

@@ -52,6 +52,9 @@ public class MainWindowController
     private Button uiSettings;
 
     @FXML
+    private Button uiPaste;
+
+    @FXML
     private ListView<Node> uiDownloadList;
 
     @Override
@@ -71,6 +74,9 @@ public class MainWindowController
             stage.setResizable(false);
             stage.show();
         });
+
+        // Paste listener
+        uiPaste.setOnMouseClicked(event -> handlePaste());
 
         // CTRL + V listener
         final KeyCombination CTRL_V_COMBINATION =
@@ -115,7 +121,7 @@ public class MainWindowController
      * Handles the CTRL + V event by adding a row for the pasted url.
      */
     private void handlePaste() {
-        L.debug("Detected CTRL + V");
+        L.debug("Detected CTRL + V or Paste action");
 
         try {
             String url = (String) Toolkit.getDefaultToolkit()
@@ -125,6 +131,12 @@ public class MainWindowController
 
 
             String identifier = String.valueOf(System.currentTimeMillis());
+
+            if (!StringUtil.isValid(identifier)) {
+                L.warn("Can't add null string to video list");
+                return;
+            }
+
             VideoRowController rowController = addVideoToDownloadList(identifier, url, null);
 
             if (rowController.hasValidProvider()) {
@@ -166,6 +178,9 @@ public class MainWindowController
         mVideoRows.put(videoController, videoRow);
 
         uiDownloadList.getItems().add(videoRow);
+
+        // Scroll to bottom
+        uiDownloadList.scrollTo(uiDownloadList.getItems().size() - 1);
 
         return videoController;
     }

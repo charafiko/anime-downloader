@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tooltip;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -22,8 +23,7 @@ import org.docheinstein.animedownloader.video.VideoProvider;
 import org.docheinstein.commons.utils.thread.ThreadUtil;
 import org.docheinstein.commons.utils.types.StringUtil;
 
-
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 
@@ -61,6 +61,11 @@ public class VideoRowController
     public enum VideoDownloadState {
         /** The video should still be downloaded.* */
         ToDownload,
+
+        /** The video will be downloaded but now is in initialization
+         * (e.g. loading video name/size).
+         */
+        Initializing,
 
         /** The download of the video is in progress. */
         Downloading,
@@ -207,13 +212,11 @@ public class VideoRowController
                 abortVideoDownload();
             else if (mCurrentVideoState == VideoDownloadState.Downloaded)
                 openDownloadFolder();
+            else if (mCurrentVideoState == VideoDownloadState.Initializing)
+                L.debug("No action bound to current state(" + mCurrentVideoState + ")");
         });
 
-        updateMultiActionButton();
-
-        // Initializes video info if provided
-
-        initUIVideoInfo();
+        updateUI();
     }
 
 
@@ -247,22 +250,14 @@ public class VideoRowController
     public void download() {
         initDownloader();
 
-        mCurrentVideoState = VideoDownloadState.Downloading;
-
-        L.debug("Going to seek for direct video link from URL: " + mUrl);
-
-        // Don't let the user do something in this transactional phase
-        uiStartStopOpen.setVisible(false);
-        uiStartStopOpen.setManaged(false);
-        uiPreDownloadSpinner.setVisible(true);
-        uiPreDownloadSpinner.setManaged(true);
+        L.debug("Download will be processed for url: " + mUrl);
 
         // Use the given video info if provided instead of reload it
         // This may be useful for skip the selenium step and directly
         // download the video which information have already been retrieved
         mDownloader.useVideoInfo(mVideoInfo);
 
-        initUIVideoInfo();
+        changeStateAndUpdateUI(VideoDownloadState.Initializing, true);
 
         ThreadUtil.start(() -> mDownloader.startDownload());
     }
@@ -275,9 +270,11 @@ public class VideoRowController
      * @return the video info
      */
     public DownloadableVideoInfo retrieveVideoInfo() {
+        changeStateAndUpdateUI(VideoDownloadState.Initializing, false);
         initDownloader();
         mVideoInfo = mDownloader.retrieveVideoInfo();
-        initUIVideoInfo();
+        // Update video info accordingly to the just retrieved video info
+        changeStateAndUpdateUI(VideoDownloadState.ToDownload, false);
         return mVideoInfo;
     }
 
@@ -298,19 +295,6 @@ public class VideoRowController
                 Settings.instance().getChromeDriverGhostModeSetting().getValue(),
                 VideoRowController.this
             );
-        }
-    }
-
-    /**
-     * Initializes the title and the size of the row accordingly to the
-     * current video info.
-     */
-    private void initUIVideoInfo() {
-        if (mVideoInfo != null) {
-            if (StringUtil.isValid(mVideoInfo.title))
-                onVideoTitleDetected(mVideoInfo.title);
-            if (mVideoInfo.size > 0)
-                onVideoSizeDetected(mVideoInfo.size, true);
         }
     }
 
@@ -348,41 +332,111 @@ public class VideoRowController
         });
     }
 
-    /**
-     * Updates the open/start/stop button accordingly to the current video state.
-     */
-    private void updateMultiActionButton() {
+    private void changeStateAndUpdateUI(VideoDownloadState state, boolean fromUIThread) {
+        L.debug("Changing video row state to: " + state +
+                " (updating from ui thread? =" + fromUIThread + ")");
+        mCurrentVideoState = state;
+        updateUI(fromUIThread);
+    }
+
+    private void updateUI(boolean fromUIThread) {
+        if (fromUIThread)
+            updateUI();
+        else
+            Platform.runLater(this::updateUI);
+    }
+
+    private void updateUI() {
+        // BEGIN Button
+
+        String buttonTooltip = null;
+        Image buttonImage = null;
+
         if (mCurrentVideoState == VideoDownloadState.ToDownload ||
             mCurrentVideoState == VideoDownloadState.Aborted) {
-            Tooltip.install(uiStartStopOpen, new Tooltip("Download"));
-            uiStartStopOpenImage.setImage(Resources.UI.START);
+            buttonTooltip = "Download";
+            buttonImage = Resources.UI.START;
         }
         else if (mCurrentVideoState == VideoDownloadState.Downloading) {
-            Tooltip.install(uiStartStopOpen, new Tooltip("Stop download"));
-            uiStartStopOpenImage.setImage(Resources.UI.STOP);
+            buttonTooltip = "Stop download";
+            buttonImage = Resources.UI.STOP;
+
         }
         else if (mCurrentVideoState == VideoDownloadState.Downloaded) {
-            Tooltip.install(uiStartStopOpen, new Tooltip("Open video folder"));
-            uiStartStopOpenImage.setImage(Resources.UI.OPEN_FOLDER);
+            buttonTooltip = "Open video folder";
+            buttonImage = Resources.UI.OPEN_FOLDER;
         }
+
+        if (buttonImage != null)
+            uiStartStopOpenImage.setImage(buttonImage);
+        if (buttonTooltip != null)
+            Tooltip.install(uiStartStopOpen, new Tooltip(buttonTooltip));
+
+        // END Button
+
+        // BEGIN Spinner | Button
+
+        // Don't let the user do something in transactional phases (.Initializing)
+
+        boolean initialiazing = mCurrentVideoState == VideoDownloadState.Initializing;
+
+        uiStartStopOpen.setVisible(!initialiazing);
+        uiStartStopOpen.setManaged(!initialiazing);
+
+        uiPreDownloadSpinner.setVisible(initialiazing);
+        uiPreDownloadSpinner.setManaged(initialiazing);
+
+        // END Spinner | Button
+
+        // BEGIN Percentage bar
+
+        if (mCurrentVideoState == VideoDownloadState.Downloading)
+            // Removes any style (in case of resumed download the bar was orange)
+            FXUtil.setClass(uiPercentage, "percentage-bar-background");
+        else if (mCurrentVideoState == VideoDownloadState.Downloaded) {
+            FXUtil.addClass(uiPercentage, "finished");
+            AnchorPane.setRightAnchor(uiPercentage, (double) 0); // Attach to right
+        }
+        else if (mCurrentVideoState == VideoDownloadState.Aborted)
+            FXUtil.addClass(uiPercentage, "aborted");
+
+        // END Percentage bar
+
+        // BEGIN Video info
+
+        if (mVideoInfo != null) {
+            if (StringUtil.isValid(mVideoInfo.title))
+                onVideoTitleDetected(mVideoInfo.title);
+            if (mVideoInfo.size > 0)
+                onVideoSizeDetected(mVideoInfo.size, true);
+        }
+
+        // END Video info
+
+        // BEGIN Download finished
+
+        if (mCurrentVideoState == VideoDownloadState.Downloaded) {
+            uiCurrent.setText(String.valueOf(mVideoInfo.size / M));
+            uiSpeedContainer.setVisible(false);
+        }
+
+        // END Download finished
+
+        // BEGIN Download info
+
+        uiDownloadInfo.setVisible(
+            mCurrentVideoState == VideoDownloadState.Downloading ||
+            mCurrentVideoState == VideoDownloadState.Aborted
+        );
+
+        // END Download info
     }
 
     @Override
     public void onVideoDownloadStarted() {
-        L.info("Download of " + mVideoInfo.title + " is started");
+        L.info("Download of " + mVideoInfo.title + " is actually started");
         mLastDownloadChunkMillis = System.currentTimeMillis();
-        Platform.runLater(() -> {
-            uiDownloadInfo.setVisible(true);
-            uiPreDownloadSpinner.setVisible(false);
-            uiPreDownloadSpinner.setManaged(false);
-            uiStartStopOpen.setVisible(true);
-            uiStartStopOpen.setManaged(true);
-
-            // Removes any style (in case of resumed download the bar was orange)
-            FXUtil.setClass(uiPercentage, "percentage-bar-background");
-
-            updateMultiActionButton();
-        });
+        changeStateAndUpdateUI(VideoDownloadState.Downloading, false);
     }
 
     @Override
@@ -417,6 +471,7 @@ public class VideoRowController
         double percentageBarWidth = parentWidth *
             /* rateo */ (double) downloadedBytes / (double) mVideoInfo.size;
 
+
         Platform.runLater(() -> {
             uiCurrent.setText(String.valueOf(downloadedBytes / M));
 
@@ -434,7 +489,7 @@ public class VideoRowController
             //    )
                 AnchorPane.setRightAnchor(
                     uiPercentage,
-                    parentWidth - percentageBarWidth
+                    newPercentageBarAnchor
                 );
         });
     }
@@ -442,36 +497,14 @@ public class VideoRowController
     @Override
     public void onVideoDownloadFinished() {
         L.info("Download of " + mVideoInfo.title + " is finished");
-        mCurrentVideoState = VideoDownloadState.Downloaded;
-
-        Platform.runLater(() -> {
-            uiCurrent.setText(String.valueOf(mVideoInfo.size / M));
-
-            uiSpeedContainer.setVisible(false);
-            updateMultiActionButton();
-
-            // Attach to right
-            AnchorPane.setRightAnchor(uiPercentage, (double) 0);
-            FXUtil.addClass(uiPercentage, "finished");
-
-            notifyDownloadEnd();
-        });
+        changeStateAndUpdateUI(VideoDownloadState.Downloaded, false);
+        notifyDownloadEnd();
     }
 
     @Override
     public void onVideoDownloadAborted() {
         L.info("Download of " + mVideoInfo.title + " has been aborted");
-
-        mCurrentVideoState = VideoDownloadState.Aborted;
-
-        Platform.runLater(() -> {
-            // Still show the download info since the file is still on the disk
-            // uiDownloadInfo.setVisible(false);
-            // AnchorPane.setRightAnchor(uiPercentage, null);
-            FXUtil.addClass(uiPercentage, "aborted");
-
-            updateMultiActionButton();
-        });
+        changeStateAndUpdateUI(VideoDownloadState.Aborted, false);
     }
 
     @Override
