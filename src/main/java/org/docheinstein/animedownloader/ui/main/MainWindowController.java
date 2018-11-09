@@ -55,6 +55,9 @@ public class MainWindowController
     private Button uiPaste;
 
     @FXML
+    private Button uiOpenDownloadFolder;
+
+    @FXML
     private ListView<Node> uiDownloadList;
 
     @Override
@@ -64,6 +67,24 @@ public class MainWindowController
 
     @FXML
     private void initialize() {
+        uiOpenDownloadFolder.setOnMouseClicked(event ->
+            ThreadUtil.start(() -> {
+                if (!Desktop.isDesktopSupported()) {
+                    L.warn("Desktop is not supported: folder can't be opened");
+                    return;
+                }
+
+                try {
+                    // Open the current download folder
+                    File downloadFolder = Settings.instance().getDownloadFolderSetting().getValue();
+                    L.debug("Trying to open " + downloadFolder + " via default file explorer");
+                    Desktop.getDesktop().open(downloadFolder);
+                } catch (IOException e) {
+                    L.warn("Current download folder can't be opened");
+                }
+            }
+        ));
+
         uiSettings.setOnMouseClicked(event -> {
             Stage stage = FXUtil.createWindow(
                 new SettingsWindowController().createNode(),

@@ -315,17 +315,18 @@ public class VideoRowController
      */
     private void openDownloadFolder() {
         ThreadUtil.start(() -> {
+            if (!Desktop.isDesktopSupported()) {
+                L.warn("Desktop is not supported: folder can't be opened");
+                return;
+            }
+
             try {
-                if (Desktop.isDesktopSupported()) {
-                    // mDownloadFolder is kept instead of retrieving the
-                    // path from setting since the setting could have been changed
-                    // after the video download
-                    L.debug("Trying to open " + mDownloadFolder
-                        + " via default file explorer");
-                    Desktop.getDesktop().open(mDownloadFolder);
-                }
-                else
-                    L.warn("Desktop is not supported: folder can't be opened");
+                // mDownloadFolder is kept instead of retrieving the
+                // path from setting since the setting could have been changed
+                // after the video download
+                L.debug("Trying to open " + mDownloadFolder
+                    + " via default file explorer");
+                Desktop.getDesktop().open(mDownloadFolder);
             } catch (IOException e) {
                 L.warn("Folder " + mDownloadFolder.getAbsolutePath() + " can't be opened");
             }
