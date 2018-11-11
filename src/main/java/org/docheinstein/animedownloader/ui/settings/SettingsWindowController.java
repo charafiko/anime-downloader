@@ -67,6 +67,9 @@ public class SettingsWindowController implements InstantiableController {
     private CheckBox uiLogging;
 
     @FXML
+    private CheckBox uiFlush;
+
+    @FXML
     private Button uiCancel;
 
     @FXML
@@ -120,6 +123,8 @@ public class SettingsWindowController implements InstantiableController {
             Settings.instance().getFFmpegSettings().getValue());
         setLoggingValue(
             Settings.instance().getLoggingSetting().getValue());
+        setFlushValue(
+            Settings.instance().getFlushSetting().getValue());
     }
 
     /**
@@ -211,6 +216,9 @@ public class SettingsWindowController implements InstantiableController {
         uiLogging.selectedProperty().setValue(value);
     }
 
+    private void setFlushValue(boolean value) {
+        uiFlush.selectedProperty().setValue(value);
+    }
     /**
      * Saves every setting.
      */
@@ -234,6 +242,8 @@ public class SettingsWindowController implements InstantiableController {
             uiChromeDriverGhostMode.isSelected());
         s.getLoggingSetting().updateSetting(
             uiLogging.isSelected());
+        s.getFlushSetting().updateSetting(
+            uiFlush.isSelected());
 
         String ffmpeg = uiFFmpeg.getText();
 

@@ -11,9 +11,12 @@
   <component name="ChangeListManager">
     <list default="true" id="103af4ae-315e-44b1-bfc7-764ffddab6d6" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/main/MainWindowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/main/MainWindowController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/video/VideoRowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/video/VideoRowController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/main_window.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/main_window.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/constants/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/constants/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/utils/ApplicationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/utils/ApplicationUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/vvvvid/VVVVIDMarionette.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/vvvvid/VVVVIDMarionette.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/settings/Settings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/settings/Settings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/settings/SettingsWindowController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/settings/SettingsWindowController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/assets/settings_window.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/assets/settings_window.fxml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -97,11 +100,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="VideoRowController.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="VideoRowController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/video/VideoRowController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="307">
-              <caret line="324" column="63" selection-start-line="324" selection-start-column="63" selection-end-line="324" selection-end-column="63" />
+            <state relative-caret-position="527">
+              <caret line="317" column="48" selection-start-line="317" selection-start-column="48" selection-end-line="317" selection-end-column="48" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -109,10 +112,49 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main_window.fxml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/assets/main_window.fxml">
-          <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
-          <provider editor-type-id="text-editor" />
+      <file leaf-file-name="VVVVIDMarionette.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/vvvvid/VVVVIDMarionette.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="494">
+              <caret line="216" column="50" lean-forward="true" selection-start-line="216" selection-start-column="50" selection-end-line="216" selection-end-column="50" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SettingsWindowController.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/settings/SettingsWindowController.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="511">
+              <caret line="250" column="19" lean-forward="true" selection-start-line="250" selection-start-column="19" selection-end-line="250" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ApplicationUtil.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/utils/ApplicationUtil.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1104">
+              <caret line="32" column="79" lean-forward="true" selection-start-line="32" selection-start-column="79" selection-end-line="32" selection-end-column="79" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Settings.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/settings/Settings.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2533">
+              <caret line="171" column="43" selection-start-line="171" selection-start-column="28" selection-end-line="171" selection-end-column="43" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Config.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/constants/Config.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="952">
+              <caret line="59" column="82" selection-start-line="59" selection-start-column="82" selection-end-line="59" selection-end-column="82" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file leaf-file-name="MainWindow.java" pinned="false" current-in-tab="false">
@@ -127,51 +169,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainWindowController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/main/MainWindowController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="70" selection-start-line="70" selection-end-line="84" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="VideoDownloader.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/VideoDownloader.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="221">
               <caret line="13" column="26" selection-start-line="13" selection-start-column="26" selection-end-line="13" selection-end-column="26" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Platform.java" pinned="false" current-in-tab="false">
-        <entry file="jar:///usr/lib/jvm/java-8-openjdk-amd64/javafx-src.zip!/javafx/application/Platform.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="952">
-              <caret line="81" column="23" selection-start-line="81" selection-start-column="23" selection-end-line="81" selection-end-column="23" />
-              <folding>
-                <element signature="e#3654#3655#0" expanded="true" />
-                <element signature="e#3701#3702#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Downloader.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/Downloader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="8" column="22" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="VideoFileMarionetteDownloader.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/VideoFileMarionetteDownloader.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="70" column="18" lean-forward="true" selection-start-line="70" selection-start-column="18" selection-end-line="70" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -196,7 +198,7 @@
       <find>loader</find>
       <find>uiPreDownloadSpinner</find>
       <find>.Downloading</find>
-      <find />
+      <find>mVideoInfo =</find>
       <find>updateMultiActionButton</find>
       <find>uiDownloadInfo.setVisible</find>
       <find>FXUtil.setClass(uiPercentage</find>
@@ -208,7 +210,7 @@
       <find>uiTitle.setText</find>
       <find>onVideoTitleDetected</find>
       <find>uiDownloadInfo</find>
-      <find />
+      <find>Detected CT</find>
       <find>initializing</find>
       <find>retrievevideoInf</find>
       <find>retrieveVideoInfo</find>
@@ -603,7 +605,6 @@
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/videodownloader/ui/video/VideoRowController.java" />
         <option value="$PROJECT_DIR$/src/main/resources/assets/video_row.fxml" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/alert/AlertFactory.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/assets/settings_window.fxml" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/constants/Const.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/alert/AlertInstance.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/utils/FXUtil.java" />
@@ -630,22 +631,23 @@
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/ChromeMarionetteDownloader.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/streamango/StreamangoMarionette.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/keyval/KeyValueFile.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/settings/Settings.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/settings/SettingsWindowController.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/video/VideoInfo.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/VideoDownloader.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/video/DownloadableVideoInfo.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/VideoFileMarionetteDownloader.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/keyval/KeyValueFileHandler.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/constants/Config.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/main/MainWindow.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/utils/ApplicationUtil.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/vvvvid/VVVVIDMarionette.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/TODO" />
         <option value="$PROJECT_DIR$/src/main/resources/assets/main_window.fxml" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/main/MainWindowController.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/video/VideoRowController.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/assets/settings_window.fxml" />
+        <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/constants/Config.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/settings/Settings.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/settings/SettingsWindowController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/utils/ApplicationUtil.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/vvvvid/VVVVIDMarionette.java" />
       </list>
     </option>
   </component>
@@ -662,8 +664,8 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="58" />
-    <option name="y" value="105" />
+    <option name="x" value="25" />
+    <option name="y" value="72" />
     <option name="width" value="1560" />
     <option name="height" value="971" />
   </component>
@@ -675,6 +677,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="AndroidView" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -749,6 +754,18 @@
               <item name="animedownloader" type="462c0819:PsiDirectoryNode" />
               <item name="commons" type="462c0819:PsiDirectoryNode" />
               <item name="constants" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="animedownloader" type="b2602c69:ProjectViewProjectNode" />
+              <item name="AnimeDownloader" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="org" type="462c0819:PsiDirectoryNode" />
+              <item name="docheinstein" type="462c0819:PsiDirectoryNode" />
+              <item name="animedownloader" type="462c0819:PsiDirectoryNode" />
+              <item name="commons" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="animedownloader" type="b2602c69:ProjectViewProjectNode" />
@@ -980,9 +997,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -998,11 +1012,11 @@
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="org.docheinstein.animedownloader.commons.utils" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources/webdriver" />
+    </key>
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="org.docheinstein.animedownloader.commons.utils" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -1173,19 +1187,23 @@
       <workItem from="1540714898933" duration="86000" />
       <workItem from="1540716718390" duration="374000" />
       <workItem from="1541626246628" duration="2479000" />
-      <workItem from="1541756274698" duration="3350000" />
+      <workItem from="1541756274698" duration="3444000" />
+      <workItem from="1541855907047" duration="4000" />
+      <workItem from="1541896800061" duration="384000" />
+      <workItem from="1541897197937" duration="174000" />
+      <workItem from="1541897385447" duration="184000" />
+      <workItem from="1541897581388" duration="777000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="154502000" />
+    <option name="totallyTimeSpent" value="156119000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="295" y="68" width="1560" height="971" extended-state="0" />
+    <frame x="25" y="72" width="1560" height="971" extended-state="0" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="7" weight="0.30674848" />
       <window_info anchor="right" id="Palette&#9;" order="4" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="5" />
@@ -1194,12 +1212,11 @@
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32914573" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32352942" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.2647059" />
+      <window_info anchor="bottom" id="Terminal" order="7" visible="true" weight="0.2647059" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.29578394" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2674572" />
       <window_info anchor="right" id="Database" order="9" weight="0.32980973" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32822758" />
       <window_info anchor="right" id="Gradle" order="7" weight="0.19508058" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -1207,12 +1224,14 @@
       <window_info anchor="right" id="Theme Preview" order="6" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.30674848" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Build" order="7" weight="0.25832224" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32822758" />
     </layout>
     <layout-to-restore>
       <window_info anchor="bottom" id="Build" order="7" weight="0.3253012" />
@@ -1311,20 +1330,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/settings/Settings.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-168">
-          <caret line="117" column="5" lean-forward="true" selection-start-line="117" selection-start-column="5" selection-end-line="117" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/settings/SettingsWindowController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="40" column="45" lean-forward="true" selection-start-line="40" selection-start-column="45" selection-end-line="40" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/constants/Const.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -1368,13 +1373,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/keyval/KeyValueFileHandler.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/constants/Config.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="84" column="35" selection-start-line="84" selection-start-column="35" selection-end-line="84" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.Docheinstein/Commons/master-SNAPSHOT/98003ec14fb82412dc7707688e1d452caffaef3d/Commons-master-SNAPSHOT-sources.jar!/org/docheinstein/commons/utils/file/KeyValueFileHandler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="518">
@@ -1427,20 +1425,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/utils/ApplicationUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="114" column="12" selection-start-line="114" selection-start-column="12" selection-end-line="114" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/vvvvid/VVVVIDMarionette.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="396" column="45" selection-start-line="396" selection-start-column="24" selection-end-line="396" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/css/style.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="207">
@@ -1452,13 +1436,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="5" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.Docheinstein/Commons/master-SNAPSHOT/98003ec14fb82412dc7707688e1d452caffaef3d/Commons-master-SNAPSHOT-sources.jar!/org/docheinstein/commons/utils/logger/DocLogger.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-204">
-          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -1508,10 +1485,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="952">
           <caret line="81" column="23" selection-start-line="81" selection-start-column="23" selection-end-line="81" selection-end-column="23" />
-          <folding>
-            <element signature="e#3654#3655#0" expanded="true" />
-            <element signature="e#3701#3702#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1524,8 +1497,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/base/VideoFileMarionetteDownloader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="70" column="18" lean-forward="true" selection-start-line="70" selection-start-column="18" selection-end-line="70" selection-end-column="18" />
+        <state relative-caret-position="1003">
+          <caret line="70" column="18" selection-start-line="70" selection-start-column="18" selection-end-line="70" selection-end-column="18" />
         </state>
       </provider>
     </entry>
@@ -1536,10 +1509,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/assets/main_window.fxml">
-      <provider selected="true" editor-type-id="JavaFX-Scene-Builder" />
-      <provider editor-type-id="text-editor" />
-    </entry>
     <entry file="jar:///usr/lib/jvm/java-8-openjdk-amd64/src.zip!/java/awt/Desktop.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -1549,7 +1518,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/main/MainWindowController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
+        <state relative-caret-position="663">
           <caret line="70" selection-start-line="70" selection-end-line="84" selection-end-column="13" />
         </state>
       </provider>
@@ -1571,13 +1540,62 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/constants/Config.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="952">
+          <caret line="59" column="82" selection-start-line="59" selection-start-column="82" selection-end-line="59" selection-end-column="82" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/settings/Settings.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2533">
+          <caret line="171" column="43" selection-start-line="171" selection-start-column="28" selection-end-line="171" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/settings/Setting.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="137">
+          <caret line="46" column="9" selection-start-line="46" selection-start-column="9" selection-end-line="46" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/settings/SettingsWindowController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="511">
+          <caret line="250" column="19" lean-forward="true" selection-start-line="250" selection-start-column="19" selection-end-line="250" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.Docheinstein/Commons/master-SNAPSHOT/98003ec14fb82412dc7707688e1d452caffaef3d/Commons-master-SNAPSHOT-sources.jar!/org/docheinstein/commons/utils/logger/DocLogger.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="115" column="23" selection-start-line="115" selection-start-column="23" selection-end-line="115" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/commons/utils/ApplicationUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1104">
+          <caret line="32" column="79" lean-forward="true" selection-start-line="32" selection-start-column="79" selection-end-line="32" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/ui/video/VideoRowController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="307">
-          <caret line="324" column="63" selection-start-line="324" selection-start-column="63" selection-end-line="324" selection-end-column="63" />
+        <state relative-caret-position="527">
+          <caret line="317" column="48" selection-start-line="317" selection-start-column="48" selection-end-line="317" selection-end-column="48" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/docheinstein/animedownloader/downloader/vvvvid/VVVVIDMarionette.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="494">
+          <caret line="216" column="50" lean-forward="true" selection-start-line="216" selection-start-column="50" selection-end-line="216" selection-end-column="50" />
         </state>
       </provider>
     </entry>

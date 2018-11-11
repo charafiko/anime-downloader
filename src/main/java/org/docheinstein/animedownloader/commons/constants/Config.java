@@ -57,6 +57,7 @@ public class Config {
         public static final File SETTING_FFMPEG = new File(Folders.SETTINGS, "ffmpeg");
 
         public static final File SETTING_LOGGING = new File(Folders.SETTINGS, "logging");
+        public static final File SETTING_FLUSH = new File(Folders.SETTINGS, "flush");
     }
 
     /** Contains the relative paths of the resources of this application. */

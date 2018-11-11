@@ -61,10 +61,16 @@ public class Settings {
         "logging"
     );
 
+    private BooleanSetting mFlushSetting = new BooleanSetting(
+        Config.Files.SETTING_FLUSH,
+        false,
+        "flush"
+    );
+
     private final Setting[] mSettings = new Setting[] {
         mDownloadFolder, mRemoveAfterDownload, mDownloadAutomatically,
         mSimultaneousVideoLimit, mChromeDriver, mChromeDriverGhostMode,
-        mFFmpeg, mLoggingSetting
+        mFFmpeg, mLoggingSetting, mFlushSetting
     };
 
     /**
@@ -152,10 +158,18 @@ public class Settings {
     }
 
     /**
-     * Returns the setting that reminds whether logging on files should be enabled-
+     * Returns the setting that reminds whether logging on files should be enabled.
      * @return the logging setting
      */
     public Setting<Boolean> getLoggingSetting() {
         return mLoggingSetting;
+    }
+
+    /**
+     * Returns the setting that reminds whether flush after every message.
+     * @return the logging setting
+     */
+    public Setting<Boolean> getFlushSetting() {
+        return mFlushSetting;
     }
 }

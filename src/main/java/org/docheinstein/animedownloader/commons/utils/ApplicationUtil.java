@@ -23,11 +23,16 @@ public class ApplicationUtil {
         ensureFolderExistence(Config.Folders.LOGS);
 
         DocLogger.enableLogLevel(DocLogger.LogLevel.Verbose, true, false);
-        enableLoggingOnFiles(Settings.instance().getLoggingSetting().getValue());
+        updateLoggingOnFilesPreference();
 
         Settings.instance().getLoggingSetting().addListener((setting, value) -> {
             L.debug("Logging setting is changed; updating DocLogger accordingly");
-            enableLoggingOnFiles(value);
+            updateLoggingOnFilesPreference();
+        });
+
+        Settings.instance().getFlushSetting().addListener((setting, value) -> {
+            L.debug("Flush setting is changed; updating DocLogger accordingly");
+            updateLoggingOnFilesPreference();
         });
 
         ensureFolderExistence(Config.Folders.TMP);
@@ -102,15 +107,17 @@ public class ApplicationUtil {
     }
 
     /**
-     * Enables/disables logging of files.
-     * @param enable whether enable logging on files
+     * Enables/disables logging of files based on current settings
      */
-    private static void enableLoggingOnFiles(boolean enable) {
+    private static void updateLoggingOnFilesPreference() {
+        boolean enable = Settings.instance().getLoggingSetting().getValue();
+        boolean flush  = Settings.instance().getFlushSetting().getValue();
+
         if (enable)
             DocLogger.enableLoggingOnFiles(
                 Config.Folders.LOGS,
                 () -> TimeUtil.dateToString(TimeUtil.Patterns.DATE_CHRONOLOGICALLY_SORTABLE),
-                false
+                flush
             );
         else
             DocLogger.disableLoggingOnFiles();

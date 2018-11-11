@@ -136,8 +136,6 @@ public class VVVVIDMarionette
 
             mDriver.get(mDownloadUrl);
 
-            passRobotCheck();
-
             skipAds();
 
             mVideoInfo = new DownloadableVideoInfo();
@@ -203,6 +201,10 @@ public class VVVVIDMarionette
 
         for (int attemptCount = 1; attemptCount <= MAX_ATTEMPTS; attemptCount++) {
             L.debug("Loading attempt [" + attemptCount + "] - sleeping for " + estimatedLoadMillis);
+
+            ThreadUtil.sleep(estimatedLoadMillis);
+
+            passRobotCheck();
 
             ThreadUtil.sleep(estimatedLoadMillis);
 
