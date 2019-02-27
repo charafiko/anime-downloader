@@ -206,19 +206,24 @@ public class VVVVIDMarionette
 
             passRobotCheck();
 
+            L.debug("Sleeping again after robot check for " + estimatedLoadMillis);
+
             ThreadUtil.sleep(estimatedLoadMillis);
 
             WebElement playerInfoShow = null;
             try {
                 playerInfoShow = mDriver.findElement(By.className("player-info-show"));
             }
-            catch (Exception e) {}
+            catch (Exception e) {
+            }
 
             // The last refresh didn't lead to ads
-            if (playerInfoShow != null)
+            if (playerInfoShow != null) {
+                L.debug("Element 'player-info-show' can't be retrieved => ads skipped");
                 return; // Ads skipped
+            }
 
-            L.debug("Ads have been loaded, trying to refresh for skip those");
+            L.debug("There are ads, refreshing now for skip those");
             mDriver.navigate().refresh();
 
             estimatedLoadMillis = (int) (estimatedLoadMillis * 1.15);

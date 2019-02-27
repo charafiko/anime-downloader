@@ -116,7 +116,7 @@ public class ApplicationUtil {
         if (enable)
             DocLogger.enableLoggingOnFiles(
                 Config.Folders.LOGS,
-                () -> TimeUtil.dateToString(TimeUtil.Patterns.DATE_CHRONOLOGICALLY_SORTABLE),
+                () -> TimeUtil.nowToString(TimeUtil.Patterns.DATE_CHRONOLOGICALLY_SORTABLE),
                 flush
             );
         else

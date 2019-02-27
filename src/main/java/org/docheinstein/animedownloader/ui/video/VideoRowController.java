@@ -459,7 +459,7 @@ public class VideoRowController
         L.verbose("Delta time: " + deltaMillis);
         L.verbose("Delta bytes: " + deltaBytes);
 
-        double kilobytesPerSecond = deltaBytes / deltaMillis;
+        int kilobytesPerSecond = (int) (deltaBytes / deltaMillis);
 
         L.verbose("KB/s = dt/dbytes = " + kilobytesPerSecond);
 
