@@ -5,7 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Region;
 import org.docheinstein.animedownloader.commons.utils.ResourceUtil;
-import org.docheinstein.commons.utils.javafx.FXUtil;
+import org.docheinstein.commons.javafx.FXUtil;
 
 /**
  * A {@link Alert} that is automatically styled with the stylesheet

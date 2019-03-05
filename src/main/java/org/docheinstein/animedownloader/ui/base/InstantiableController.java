@@ -2,7 +2,7 @@ package org.docheinstein.animedownloader.ui.base;
 
 import javafx.scene.Parent;
 import org.docheinstein.animedownloader.commons.utils.ResourceUtil;
-import org.docheinstein.commons.utils.javafx.FXUtil;
+import org.docheinstein.commons.javafx.FXUtil;
 
 /**
  * Entity that represents a controller able to allocate its content

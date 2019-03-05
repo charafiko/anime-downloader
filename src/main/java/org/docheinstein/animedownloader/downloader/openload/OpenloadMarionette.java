@@ -1,9 +1,9 @@
 package org.docheinstein.animedownloader.downloader.openload;
 
 import org.docheinstein.animedownloader.downloader.base.VideoFileMarionetteDownloader;
-import org.docheinstein.commons.utils.http.HttpRequester;
-import org.docheinstein.commons.utils.logger.DocLogger;
-import org.docheinstein.commons.utils.types.StringUtil;
+import org.docheinstein.commons.http.HttpRequester;
+import org.docheinstein.commons.logger.DocLogger;
+import org.docheinstein.commons.types.StringUtil;
 
 import org.docheinstein.animedownloader.downloader.base.VideoDownloadObserver;
 import org.docheinstein.animedownloader.video.DownloadableVideoInfo;
@@ -29,7 +29,7 @@ public class OpenloadMarionette extends VideoFileMarionetteDownloader {
     private static final String DIRECT_LINK_CURRENT_TEMPLATE = "https://openload.co/stream/%s";
 
     /** ID of the container of the video's direct link. */
-    private static final String DIRECT_LINK_CURRENT_CONTAINER_ID = "DtsBlkVFQx";
+    private static final String DIRECT_LINK_CURRENT_CONTAINER_ID = "lqEH1";
 
     public OpenloadMarionette(String downloadUrl,
                               File outputPath,

@@ -7,7 +7,7 @@ import org.docheinstein.animedownloader.commons.constants.Config;
 
 import org.docheinstein.animedownloader.commons.constants.Resources;
 import org.docheinstein.animedownloader.commons.utils.ApplicationUtil;
-import org.docheinstein.commons.utils.javafx.FXUtil;
+import org.docheinstein.commons.javafx.FXUtil;
 
 
 /**

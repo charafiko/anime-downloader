@@ -3,7 +3,7 @@ package org.docheinstein.animedownloader.video;
 import javafx.scene.image.Image;
 import org.docheinstein.animedownloader.downloader.streamango.StreamangoMarionette;
 import org.docheinstein.animedownloader.downloader.vvvvid.VVVVIDMarionette;
-import org.docheinstein.commons.utils.types.StringUtil;
+import org.docheinstein.commons.types.StringUtil;
 import org.docheinstein.animedownloader.commons.constants.Resources;
 import org.docheinstein.animedownloader.downloader.base.ChromeMarionetteDownloader;
 import org.docheinstein.animedownloader.downloader.base.VideoDownloadObserver;

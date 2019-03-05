@@ -1,10 +1,10 @@
 package org.docheinstein.animedownloader.downloader.base;
 
 import org.docheinstein.animedownloader.video.DownloadableVideoInfo;
-import org.docheinstein.commons.utils.file.FileUtil;
-import org.docheinstein.commons.utils.http.HttpDownloader;
-import org.docheinstein.commons.utils.http.HttpRequester;
-import org.docheinstein.commons.utils.logger.DocLogger;
+import org.docheinstein.commons.file.FileUtil;
+import org.docheinstein.commons.http.HttpDownloader;
+import org.docheinstein.commons.http.HttpRequester;
+import org.docheinstein.commons.logger.DocLogger;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,8 +1,8 @@
 package org.docheinstein.animedownloader.settings;
 
-import org.docheinstein.commons.utils.file.FileUtil;
-import org.docheinstein.commons.utils.logger.DocLogger;
-import org.docheinstein.commons.utils.types.StringUtil;
+import org.docheinstein.commons.file.FileUtil;
+import org.docheinstein.commons.logger.DocLogger;
+import org.docheinstein.commons.types.StringUtil;
 
 import java.io.File;
 import java.util.Set;

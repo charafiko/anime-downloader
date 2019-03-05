@@ -2,11 +2,11 @@ package org.docheinstein.animedownloader.commons.utils;
 
 import org.docheinstein.animedownloader.settings.Setting;
 import org.docheinstein.animedownloader.settings.Settings;
-import org.docheinstein.commons.utils.file.FileUtil;
-import org.docheinstein.commons.utils.logger.DocLogger;
+import org.docheinstein.commons.file.FileUtil;
+import org.docheinstein.commons.logger.DocLogger;
 import org.docheinstein.animedownloader.commons.constants.Config;
-import org.docheinstein.commons.utils.time.TimeUtil;
-import org.docheinstein.commons.utils.zip.ZipUtil;
+import org.docheinstein.commons.time.TimeUtil;
+import org.docheinstein.commons.zip.ZipUtil;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,6 +1,6 @@
 package org.docheinstein.animedownloader.downloader.base;
 
-import org.docheinstein.commons.utils.logger.DocLogger;
+import org.docheinstein.commons.logger.DocLogger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;

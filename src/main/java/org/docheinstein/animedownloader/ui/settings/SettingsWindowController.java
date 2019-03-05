@@ -7,10 +7,10 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.docheinstein.animedownloader.ui.base.InstantiableController;
-import org.docheinstein.commons.utils.file.FileUtil;
-import org.docheinstein.commons.utils.logger.DocLogger;
+import org.docheinstein.commons.file.FileUtil;
+import org.docheinstein.commons.logger.DocLogger;
 import org.docheinstein.animedownloader.settings.Settings;
-import org.docheinstein.commons.utils.types.StringUtil;
+import org.docheinstein.commons.types.StringUtil;
 
 import java.io.File;
 

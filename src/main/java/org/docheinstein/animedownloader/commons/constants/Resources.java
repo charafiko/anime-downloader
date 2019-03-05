@@ -2,7 +2,7 @@ package org.docheinstein.animedownloader.commons.constants;
 
 import javafx.scene.image.Image;
 import org.docheinstein.animedownloader.commons.utils.ResourceUtil;
-import org.docheinstein.commons.utils.javafx.FXUtil;
+import org.docheinstein.commons.javafx.FXUtil;
 
 /** Contains preloaded resources. */
 public class Resources {

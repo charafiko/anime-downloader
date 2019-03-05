@@ -1,7 +1,7 @@
 package org.docheinstein.animedownloader.commons.utils;
 
 
-import org.docheinstein.commons.utils.asserts.Asserts;
+import org.docheinstein.commons.asserts.Asserts;
 import org.docheinstein.animedownloader.commons.constants.Config;
 
 import java.io.InputStream;

@@ -1,6 +1,6 @@
 package org.docheinstein.animedownloader.settings;
 
-import org.docheinstein.commons.utils.types.StringUtil;
+import org.docheinstein.commons.types.StringUtil;
 
 import java.io.File;
 

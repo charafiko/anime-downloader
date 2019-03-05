@@ -1,7 +1,7 @@
 package org.docheinstein.animedownloader.commons.constants;
 
-import org.docheinstein.commons.utils.system.OSType;
-import org.docheinstein.commons.utils.system.SystemUtil;
+import org.docheinstein.commons.system.OSType;
+import org.docheinstein.commons.system.SystemUtil;
 
 import java.io.File;
 
