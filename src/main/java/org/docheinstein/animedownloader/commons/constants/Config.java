@@ -50,6 +50,8 @@ public class Config {
         public static final File SETTING_REMOVE_AFTER_DOWNLOAD = new File(Folders.SETTINGS, "remove_after_download");
         public static final File SETTING_DOWNLOAD_AUTOMATICALLY = new File(Folders.SETTINGS, "download_automatically");
         public static final File SETTING_SIMULTANEOUS_LIMIT = new File(Folders.SETTINGS, "simultaneous_video_limit");
+        public static final File SETTING_SIMULTANEOUS_LIMIT_FOR_EACH_PROVIDER
+            = new File(Folders.SETTINGS, "simultaneous_video_limit_for_each_provider");
 
         public static final File SETTING_CHROME_DRIVER = new File(Folders.SETTINGS, "chrome_driver");
         public static final File SETTING_CHROME_DRIVER_GHOST_MODE = new File(Folders.SETTINGS, "chrome_driver_ghost_mode");

@@ -46,6 +46,10 @@ public class SettingsWindowController implements InstantiableController {
 
 
     @FXML
+    private CheckBox uiSimultaneousVideoForEachProvider;
+
+
+    @FXML
     private Button uiChromeDriverButton;
 
     @FXML
@@ -115,6 +119,8 @@ public class SettingsWindowController implements InstantiableController {
             Settings.instance().getDownloadAutomaticallySetting().getValue());
         setSimultaneousVideoLimitValue(
             Settings.instance().getSimultaneousVideoLimitSetting().getValue());
+        setSimultaneousVideoLimitForEachProvider(
+            Settings.instance().getSimultaneousVideoForEachProvider().getValue());
         setChromeDriverFile(
             Settings.instance().getChromeDriverSetting().getValue());
         setChromeDriverGhostModeValue(
@@ -200,6 +206,10 @@ public class SettingsWindowController implements InstantiableController {
         uiSimultaneousVideo.getValueFactory().setValue(value);
     }
 
+    private void setSimultaneousVideoLimitForEachProvider(boolean value) {
+        uiSimultaneousVideoForEachProvider.selectedProperty().setValue(value);
+    }
+
     private void setChromeDriverFile(File file) {
         uiChromeDriver.setText(file != null ? file.getAbsolutePath() : "");
     }
@@ -236,6 +246,8 @@ public class SettingsWindowController implements InstantiableController {
             uiDownloadAutomatically.isSelected());
         s.getSimultaneousVideoLimitSetting().updateSetting(
             uiSimultaneousVideo.getValue());
+        s.getSimultaneousVideoForEachProvider().updateSetting(
+            uiSimultaneousVideoForEachProvider.isSelected());
         s.getChromeDriverSetting().updateSetting(
             new File(uiChromeDriver.getText()));
         s.getChromeDriverGhostModeSetting().updateSetting(

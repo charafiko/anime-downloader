@@ -229,6 +229,14 @@ public class VideoRowController
     }
 
     /**
+     * Returns the video provider of this row.
+     * @return the video provider
+     */
+    public VideoProvider getProvider() {
+        return mProvider;
+    }
+
+    /**
      * Returns the current state for the download of the video.
      * @return the video download state
      */

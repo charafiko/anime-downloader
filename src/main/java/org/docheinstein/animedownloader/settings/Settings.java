@@ -34,6 +34,12 @@ public class Settings {
         "simultaneous_video_limit"
     );
 
+    private BooleanSetting mSimultaneousVideoLimitForEachProvider = new BooleanSetting(
+        Config.Files.SETTING_SIMULTANEOUS_LIMIT_FOR_EACH_PROVIDER,
+        true,
+        "simultaneous_video_limit_for_each_provider"
+    );
+
     // Executables path
 
     private FileSetting mChromeDriver = new FileSetting(
@@ -69,7 +75,8 @@ public class Settings {
 
     private final Setting[] mSettings = new Setting[] {
         mDownloadFolder, mRemoveAfterDownload, mDownloadAutomatically,
-        mSimultaneousVideoLimit, mChromeDriver, mChromeDriverGhostMode,
+        mSimultaneousVideoLimit, mSimultaneousVideoLimitForEachProvider,
+        mChromeDriver, mChromeDriverGhostMode,
         mFFmpeg, mLoggingSetting, mFlushSetting
     };
 
@@ -129,6 +136,15 @@ public class Settings {
      */
     public Setting<Integer> getSimultaneousVideoLimitSetting() {
         return mSimultaneousVideoLimit;
+    }
+
+    /**
+     * Returns the setting that reminds whether the simultaneous video limit
+     * is referred to each provider or is global.
+     * @return the simultaneous video limit setting
+     */
+    public Setting<Boolean> getSimultaneousVideoForEachProvider() {
+        return mSimultaneousVideoLimitForEachProvider;
     }
 
     /**

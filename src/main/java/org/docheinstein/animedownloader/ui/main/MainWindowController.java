@@ -11,6 +11,7 @@ import javafx.util.Callback;
 import org.docheinstein.animedownloader.settings.Settings;
 import org.docheinstein.animedownloader.ui.base.InstantiableController;
 import org.docheinstein.animedownloader.video.DownloadableVideoInfo;
+import org.docheinstein.animedownloader.video.VideoProvider;
 import org.docheinstein.commons.javafx.FXUtil;
 import org.docheinstein.commons.thread.ThreadUtil;
 import org.docheinstein.commons.file.FileUtil;
@@ -297,19 +298,32 @@ public class MainWindowController
             return;
         }
 
+        boolean forEachProvider = Settings.instance().getSimultaneousVideoForEachProvider().getValue();
+
+        Map<VideoProvider, Integer> inDownloadVideos = new HashMap<>();
+
         int inDownloadCount = 0;
 
         for (Map.Entry<VideoRowController, Node> row : mVideoRows.entrySet()) {
-            if (row.getKey().getState() == VideoRowController.VideoDownloadState.Downloading)
+            VideoRowController videoRow = row.getKey();
+            if (videoRow.getState() == VideoRowController.VideoDownloadState.Downloading) {
+                inDownloadVideos.put(
+                    videoRow.getProvider(),
+                    inDownloadVideos.getOrDefault(videoRow.getProvider(), 0) + 1
+                );
                 inDownloadCount++;
+            }
         }
 
         int downloadLimit  = Settings.instance().getSimultaneousVideoLimitSetting().getValue();
 
         L.debug("There are " + inDownloadCount + " video in download");
-        L.debug("The download limit is "+ downloadLimit);
+        L.debug("The download limit is: " + downloadLimit);
+        L.debug("Referred to each provider: " + forEachProvider);
 
-        if (inDownloadCount >= downloadLimit) {
+        // Check if the download count exceed the limit, but only if forEachProvider
+        // is not true and so the limit is referred to a global limit
+        if (!forEachProvider && inDownloadCount >= downloadLimit) {
             L.debug("Video won't be started automatically since it would exceed the limit");
             return;
         }
@@ -319,9 +333,14 @@ public class MainWindowController
         for (Map.Entry<VideoRowController, Node> row : mVideoRows.entrySet()) {
             VideoRowController video = row.getKey();
             if (video.getState() == VideoRowController.VideoDownloadState.ToDownload) {
-                L.debug("Found video still to download, automatically downloading it");
-                video.download();
-                return;
+
+                int inDownloadForProvider = inDownloadVideos.getOrDefault(video.getProvider(), 0);
+
+                if (inDownloadForProvider < downloadLimit) {
+                    L.debug("Found video still to download, automatically downloading it");
+                    video.download();
+                    return;
+                }
             }
         }
 

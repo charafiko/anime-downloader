@@ -147,11 +147,31 @@
                                                      <Label maxWidth="600.0" styleClass="text-midday-more-1" text="Maximum number of simultaneous video that can be downloaded at the same time (when 'Download Automatically' is enabled)" wrapText="true" />
                                                   </children>
                                                </HBox>
-                                               <Separator layoutX="10.0" layoutY="283.0">
-                                                  <padding>
-                                                     <Insets bottom="16.0" top="16.0" />
-                                                  </padding>
-                                               </Separator>
+                                                <Separator layoutX="10.0" layoutY="195.0">
+                                                   <padding>
+                                                      <Insets bottom="16.0" top="16.0" />
+                                                   </padding>
+                                                </Separator>
+                                                <Label layoutX="10.0" layoutY="230.0" styleClass="text-midday" text="Simultaneous video of different providers">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                   <VBox.margin>
+                                                      <Insets bottom="12.0" />
+                                                   </VBox.margin>
+                                                </Label>
+                                                <CheckBox fx:id="uiSimultaneousVideoForEachProvider" layoutX="10.0" layoutY="261.0" mnemonicParsing="false" text="For each video provider, allow the specified simultaneous video limit" wrapText="true">
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                   <styleClass>
+                                                      <String fx:value="text-midday-more-1" />
+                                                      <String fx:value="check-box-midnight" />
+                                                   </styleClass>
+                                                   <cursor>
+                                                      <Cursor fx:constant="HAND" />
+                                                   </cursor>
+                                                </CheckBox>
                                             </children>
                                          </VBox>
                                       </children>
