@@ -414,7 +414,7 @@ public class MainWindowController
                 currentBandwidth += bw;
             }
 
-            L.debug("#" + (i + 1) + " Total current bandwidth is " + (currentBandwidth / 1000)+ "KB/s");
+            L.debug("#" + (i + 1) + " Total current bandwidth is " + (currentBandwidth / 1000) + "KB/s");
             if (currentBandwidth > bandwidthLimit) {
                 L.debug("Can't download since bandwidth limit would be exceeded");
                 return false; // Current bandwidth is above the threshold, doing nothing

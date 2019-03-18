@@ -96,6 +96,6 @@ public class Config {
     }
 
     public static class Download {
-        public static final int ADAPTIVE_STRATEGY_SECONDS_BEFORE_PROCEED = 5;
+        public static final int ADAPTIVE_STRATEGY_SECONDS_BEFORE_PROCEED = 10;
     }
 }

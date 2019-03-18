@@ -156,8 +156,8 @@ public class SettingsWindowController implements InstantiableController {
             Settings.instance().getSimultaneousVideoLimitSetting().getValue());
         setSimultaneousVideoLimitForEachProvider(
             Settings.instance().getSimultaneousVideoForEachProvider().getValue());
-        setExpectedBandwidth(
-            Settings.instance().getBandwidthLimit().getValue() / Const.Units.MB);
+        setBandwidthLimit(
+            ((double) Settings.instance().getBandwidthLimit().getValue()) / Const.Units.MB);
         setChromeDriverFile(
             Settings.instance().getChromeDriverSetting().getValue());
         setChromeDriverGhostModeValue(
@@ -251,7 +251,7 @@ public class SettingsWindowController implements InstantiableController {
         uiSimultaneousVideoForEachProvider.selectedProperty().setValue(value);
     }
 
-    private void setExpectedBandwidth(double mbps) {
+    private void setBandwidthLimit(double mbps) {
         uiBandwidthLimit.getValueFactory().setValue(mbps);
     }
 
