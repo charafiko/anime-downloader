@@ -97,6 +97,8 @@ public class VideoRowController
     /** Bytes downloaded as of the last chunk download (kept for calculate the download speed). */
     private long mLastDownloadChunkBytes = 0;
 
+    private int mLastBytesPerSecond = 0;
+
     /** Underlying download used for actually download the video.*/
     private VideoDownloader mDownloader;
 
@@ -193,8 +195,7 @@ public class VideoRowController
         if (mProvider == null) {
             L.warn("The pasted link doesn't belong to any valid provider");
             // Download is not allowed if the provider is not recognized
-            uiStartStopOpen.setVisible(false);
-            uiStartStopOpen.setManaged(false);
+            FXUtil.setExistent(uiStartStopOpen, false);
             return;
         }
 
@@ -245,11 +246,28 @@ public class VideoRowController
     }
 
     /**
+     * Returns the bandwidth of the last second of download expressed in bytes
+     * per seconds.
+     * @return the instant bandwidth
+     */
+    public int getInstantBandwidth() {
+        return mLastBytesPerSecond;
+    }
+
+    /**
      * Returns the identifier of the video.
      * @return the identifier of the video
      */
     public String getIdentifier() {
         return mIdentifier;
+    }
+
+    /**
+     * Returns the video info.
+     * @return the video info
+     */
+    public DownloadableVideoInfo getVideoInfo() {
+        return mVideoInfo;
     }
 
     /**
@@ -343,7 +361,7 @@ public class VideoRowController
 
     private void changeStateAndUpdateUI(VideoDownloadState state, boolean fromUIThread) {
         L.debug("Changing video row state to: " + state +
-                " (updating from ui thread? =" + fromUIThread + ")");
+                " (updating from ui thread? = " + fromUIThread + ")");
         mCurrentVideoState = state;
         updateUI(fromUIThread);
     }
@@ -389,11 +407,8 @@ public class VideoRowController
 
         boolean initialiazing = mCurrentVideoState == VideoDownloadState.Initializing;
 
-        uiStartStopOpen.setVisible(!initialiazing);
-        uiStartStopOpen.setManaged(!initialiazing);
-
-        uiPreDownloadSpinner.setVisible(initialiazing);
-        uiPreDownloadSpinner.setManaged(initialiazing);
+        FXUtil.setExistent(uiStartStopOpen, !initialiazing);
+        FXUtil.setExistent(uiPreDownloadSpinner, initialiazing);
 
         // END Spinner | Button
 
@@ -464,11 +479,14 @@ public class VideoRowController
         mLastDownloadChunkBytes = downloadedBytes;
         mLastDownloadChunkMillis = millis;
 
-        L.verbose("Delta time: " + deltaMillis);
-        L.verbose("Delta bytes: " + deltaBytes);
+        // deltaMillis : deltaBytes = 1000 : mLastBytesPerSecond
+        // mLastBytesPerSecond = deltaBytes  * 1000 / deltaMillis
 
         int kilobytesPerSecond = (int) (deltaBytes / deltaMillis);
+        mLastBytesPerSecond = (int) (deltaBytes * 1000 / deltaMillis);
 
+        L.verbose("Delta time: " + deltaMillis);
+        L.verbose("Delta bytes: " + deltaBytes);
         L.verbose("KB/s = dt/dbytes = " + kilobytesPerSecond);
 
         double rateo = (double) downloadedBytes / (double) mVideoInfo.size;
@@ -506,6 +524,7 @@ public class VideoRowController
     @Override
     public void onVideoDownloadFinished() {
         L.info("Download of " + mVideoInfo.title + " is finished");
+        mLastBytesPerSecond = 0;
         changeStateAndUpdateUI(VideoDownloadState.Downloaded, false);
         notifyDownloadEnd();
     }
@@ -513,6 +532,7 @@ public class VideoRowController
     @Override
     public void onVideoDownloadAborted() {
         L.info("Download of " + mVideoInfo.title + " has been aborted");
+        mLastBytesPerSecond = 0;
         changeStateAndUpdateUI(VideoDownloadState.Aborted, false);
     }
 

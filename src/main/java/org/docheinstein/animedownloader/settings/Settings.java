@@ -8,6 +8,37 @@ import java.io.File;
  * Contains all the settings used by the application.
  */
 public class Settings {
+
+    public enum AutomaticDownloadStrategy {
+        Static("static"),
+        Adaptive("adaptive")
+        ;
+
+        private String mName;
+
+        AutomaticDownloadStrategy(String name) {
+            mName = name;
+        }
+
+        public static AutomaticDownloadStrategy fromName(String name) {
+            if (name == null)
+                return null;
+            switch (name) {
+                case "static":
+                    return Static;
+                case "adaptive":
+                    return Adaptive;
+                default:
+                    return null;
+            }
+        }
+
+        public String getName() {
+            return mName;
+        }
+
+    }
+
     private static final Settings INSTANCE = new Settings();
 
     private FileSetting mDownloadFolder = new FileSetting(
@@ -28,6 +59,23 @@ public class Settings {
         "download_automatically"
     );
 
+    private Setting<AutomaticDownloadStrategy> mAutomaticDownloadStrategy =
+        new SettingImpl<AutomaticDownloadStrategy>(
+            Config.Files.SETTING_AUTOMATIC_DOWNLOAD_STRATEGY,
+            AutomaticDownloadStrategy.Static,
+            "automatic_download_strategy"
+        ) {
+            @Override
+            public AutomaticDownloadStrategy createValueFromSettingFileContent(String fileContent) {
+                return AutomaticDownloadStrategy.fromName(fileContent);
+            }
+
+            @Override
+            public String createSettingFileContentFromValue(AutomaticDownloadStrategy value) {
+                return value == null ? null : value.getName();
+            }
+        };
+
     private IntegerSetting mSimultaneousVideoLimit = new IntegerSetting(
         Config.Files.SETTING_SIMULTANEOUS_LIMIT,
         1,
@@ -38,6 +86,12 @@ public class Settings {
         Config.Files.SETTING_SIMULTANEOUS_LIMIT_FOR_EACH_PROVIDER,
         true,
         "simultaneous_video_limit_for_each_provider"
+    );
+
+    private IntegerSetting mBandwidthLimit = new IntegerSetting(
+        Config.Files.SETTING_BANDWIDTH_LIMIT,
+        1,
+        "bandwidth_limit"
     );
 
     // Executables path
@@ -75,7 +129,10 @@ public class Settings {
 
     private final Setting[] mSettings = new Setting[] {
         mDownloadFolder, mRemoveAfterDownload, mDownloadAutomatically,
-        mSimultaneousVideoLimit, mSimultaneousVideoLimitForEachProvider,
+        mAutomaticDownloadStrategy,
+        mSimultaneousVideoLimit,
+        mSimultaneousVideoLimitForEachProvider,
+        mBandwidthLimit,
         mChromeDriver, mChromeDriverGhostMode,
         mFFmpeg, mLoggingSetting, mFlushSetting
     };
@@ -131,7 +188,17 @@ public class Settings {
     }
 
     /**
+     * Returns the setting that reminds the download strategy
+     * @return the download strategy setting
+     */
+    public Setting<AutomaticDownloadStrategy> getAutomaticDownloadStrategySetting() {
+        return mAutomaticDownloadStrategy;
+    }
+
+    /**
      * Returns the setting that reminds the limit of simultaneous download.
+     * <p>
+     * Is valid only if the download strategy is set to 'Static'.
      * @return the simultaneous video limit setting
      */
     public Setting<Integer> getSimultaneousVideoLimitSetting() {
@@ -141,10 +208,23 @@ public class Settings {
     /**
      * Returns the setting that reminds whether the simultaneous video limit
      * is referred to each provider or is global.
+     * <p>
+     * Is valid only if the download strategy is set to 'Static'.
      * @return the simultaneous video limit setting
      */
     public Setting<Boolean> getSimultaneousVideoForEachProvider() {
         return mSimultaneousVideoLimitForEachProvider;
+    }
+
+    /**
+     * Returns the setting that reminds the bandwidth limit for download
+     * expressed in bytes per seconds.
+     * <p>
+     * Is valid only if the download strategy is set to 'Adaptive'.
+     * @return the expected bandwidth setting
+     */
+    public Setting<Integer> getBandwidthLimit() {
+        return mBandwidthLimit;
     }
 
     /**

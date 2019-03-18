@@ -6,4 +6,10 @@ public class Const {
         public static final long K = 1000;
         public static final long M = K * K;
     }
+
+    public static class Units {
+        public static final int KB = 1000;
+        public static final int MB = KB * 1000;
+        public static final int GB = MB * 1000;
+    }
 }

@@ -49,7 +49,9 @@ public class Config {
         public static final File SETTING_DOWNLOAD_FOLDER = new File(Folders.SETTINGS, "download_folder");
         public static final File SETTING_REMOVE_AFTER_DOWNLOAD = new File(Folders.SETTINGS, "remove_after_download");
         public static final File SETTING_DOWNLOAD_AUTOMATICALLY = new File(Folders.SETTINGS, "download_automatically");
+        public static final File SETTING_AUTOMATIC_DOWNLOAD_STRATEGY = new File(Folders.SETTINGS, "automatic_download_strategy");
         public static final File SETTING_SIMULTANEOUS_LIMIT = new File(Folders.SETTINGS, "simultaneous_video_limit");
+        public static final File SETTING_BANDWIDTH_LIMIT = new File(Folders.SETTINGS, "bandwidth_limit");
         public static final File SETTING_SIMULTANEOUS_LIMIT_FOR_EACH_PROVIDER
             = new File(Folders.SETTINGS, "simultaneous_video_limit_for_each_provider");
 
@@ -91,5 +93,9 @@ public class Config {
         public static final String KEY_FILENAME =  "FILENAME";
         public static final String KEY_DIRECT_LINK =  "DIRECT_LINK";
         public static final String KEY_SIZE =  "SIZE";
+    }
+
+    public static class Download {
+        public static final int ADAPTIVE_STRATEGY_SECONDS_BEFORE_PROCEED = 5;
     }
 }

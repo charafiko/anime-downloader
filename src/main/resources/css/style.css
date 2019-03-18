@@ -143,6 +143,34 @@
     -fx-border-color: transparent;
 }
 
+/* Combobox */
+
+.combo-box
+{
+    -fx-background-color: -midnight-less-2;
+    -fx-text-fill: -midday;
+}
+
+.combo-box > .list-cell {
+    -fx-text-fill: -midday;
+}
+
+.combo-box > .list-view
+{
+    -fx-background-color: -midnight-less-2;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet >  .list-cell {
+    -fx-padding: 4;
+    -fx-background: -midnight-less-2;
+}
+
+.combo-box-popup > .list-view > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:hover {
+    -fx-background-color: -fx-accent;
+    -fx-text-fill: -midday;
+}
+
+
 /* Checkbox */
 
 .check-box-midnight .box {
@@ -150,6 +178,20 @@
     -fx-border-color: -midday-more-1;
     -fx-border-radius: 3px;
     -fx-padding: 4px;
+}
+
+/* Textbox */
+
+.text-input
+{
+    -fx-background-color: -midnight-less-1;
+}
+
+.text-area .scroll-pane,
+.text-area .content
+{
+    -fx-background-color: -midnight-less-1;
+    -fx-text-fill: -midday;
 }
 
 .check-box-midnight:selected .mark {

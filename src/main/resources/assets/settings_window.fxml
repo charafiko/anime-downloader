@@ -5,6 +5,7 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
@@ -16,16 +17,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane styleClass="bg-midnight" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="uiRoot" prefHeight="750.0" prefWidth="800.0" styleClass="bg-midnight" stylesheets="@../css/style.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <VBox layoutX="10.0" layoutY="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TabPane styleClass="tab-pane-midnight">
+            <TabPane styleClass="tab-pane-midnight" VBox.vgrow="ALWAYS">
                <tabs>
                   <Tab closable="false" text="General">
                     <content>
-            
-                       <ScrollPane fx:id="uiRoot" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" styleClass="bg-midnight">
+
+                       <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" styleClass="bg-midnight">
                           <content>
                              <AnchorPane styleClass="bg-midnight">
                                 <children>
@@ -33,52 +34,6 @@
                                       <children>
                                          <VBox VBox.vgrow="ALWAYS">
                                             <children>
-                                               <Label styleClass="text-midday" text="Download folder">
-                                                  <font>
-                                                     <Font name="System Bold" size="15.0" />
-                                                  </font>
-                                                  <VBox.margin>
-                                                     <Insets bottom="12.0" />
-                                                  </VBox.margin>
-                                               </Label>
-                                               <Label styleClass="text-midday-more-1" text="Select the folder the video will be downloaded to">
-                                                  <VBox.margin>
-                                                     <Insets bottom="10.0" />
-                                                  </VBox.margin>
-                                                  <font>
-                                                     <Font name="System Italic" size="13.0" />
-                                                  </font>
-                                               </Label>
-                                               <HBox alignment="CENTER_LEFT">
-                                                  <children>
-                                                     <Button fx:id="uiDownloadFolderButton" mnemonicParsing="false" text="Change folder">
-                                                        <HBox.margin>
-                                                           <Insets right="16.0" />
-                                                        </HBox.margin>
-                                                        <styleClass>
-                                                           <String fx:value="btn-midnight" />
-                                                           <String fx:value="text-midday" />
-                                                           <String fx:value="glow-on-hover" />
-                                                        </styleClass>
-                                                        <padding>
-                                                           <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
-                                                        </padding>
-                                                        <cursor>
-                                                           <Cursor fx:constant="HAND" />
-                                                        </cursor>
-                                                     </Button>
-                                                     <Label fx:id="uiDownloadFolder" styleClass="text-midday">
-                                                          <font>
-                                                           <Font name="Noto Mono" size="14.0" />
-                                                        </font>
-                                                     </Label>
-                                                  </children>
-                                               </HBox>
-                                               <Separator>
-                                                  <VBox.margin>
-                                                     <Insets bottom="16.0" top="16.0" />
-                                                  </VBox.margin>
-                                               </Separator>
                                                <Label layoutX="10.0" layoutY="10.0" styleClass="text-midday" text="Remove downloaded video from list">
                                                   <font>
                                                      <Font name="System Bold" size="15.0" />
@@ -99,79 +54,6 @@
                                                      <Cursor fx:constant="HAND" />
                                                   </cursor>
                                                </CheckBox>
-                                               <Separator layoutX="10.0" layoutY="123.0">
-                                                  <padding>
-                                                     <Insets bottom="16.0" top="16.0" />
-                                                  </padding>
-                                               </Separator>
-                                               <Label layoutX="10.0" layoutY="142.0" styleClass="text-midday" text="Download automatically">
-                                                  <font>
-                                                     <Font name="System Bold" size="15.0" />
-                                                  </font>
-                                                  <VBox.margin>
-                                                     <Insets bottom="12.0" />
-                                                  </VBox.margin>
-                                               </Label>
-                                               <CheckBox fx:id="uiDownloadAutomatically" layoutX="10.0" layoutY="173.0" mnemonicParsing="false" text="Automatically download pasted video and proceed to download remaining video (until the specified limit)" wrapText="true">
-                                                  <opaqueInsets>
-                                                     <Insets />
-                                                  </opaqueInsets>
-                                                  <styleClass>
-                                                     <String fx:value="text-midday-more-1" />
-                                                     <String fx:value="check-box-midnight" />
-                                                  </styleClass>
-                                                  <cursor>
-                                                     <Cursor fx:constant="HAND" />
-                                                  </cursor>
-                                               </CheckBox>
-                                               <Separator layoutX="10.0" layoutY="195.0">
-                                                  <padding>
-                                                     <Insets bottom="16.0" top="16.0" />
-                                                  </padding>
-                                               </Separator>
-                                               <Label layoutX="10.0" layoutY="230.0" styleClass="text-midday" text="Simultaneous video download limit">
-                                                  <font>
-                                                     <Font name="System Bold" size="15.0" />
-                                                  </font>
-                                                  <VBox.margin>
-                                                     <Insets bottom="12.0" />
-                                                  </VBox.margin>
-                                               </Label>
-                                               <HBox alignment="CENTER_LEFT">
-                                                  <children>
-                                                     <Spinner fx:id="uiSimultaneousVideo" editable="true" minWidth="80.0" prefWidth="80.0" styleClass="spinner-midnight">
-                                                        <HBox.margin>
-                                                           <Insets right="12.0" />
-                                                        </HBox.margin>
-                                                     </Spinner>
-                                                     <Label maxWidth="600.0" styleClass="text-midday-more-1" text="Maximum number of simultaneous video that can be downloaded at the same time (when 'Download Automatically' is enabled)" wrapText="true" />
-                                                  </children>
-                                               </HBox>
-                                                <Separator layoutX="10.0" layoutY="195.0">
-                                                   <padding>
-                                                      <Insets bottom="16.0" top="16.0" />
-                                                   </padding>
-                                                </Separator>
-                                                <Label layoutX="10.0" layoutY="230.0" styleClass="text-midday" text="Simultaneous video of different providers">
-                                                   <font>
-                                                      <Font name="System Bold" size="15.0" />
-                                                   </font>
-                                                   <VBox.margin>
-                                                      <Insets bottom="12.0" />
-                                                   </VBox.margin>
-                                                </Label>
-                                                <CheckBox fx:id="uiSimultaneousVideoForEachProvider" layoutX="10.0" layoutY="261.0" mnemonicParsing="false" text="For each video provider, allow the specified simultaneous video limit" wrapText="true">
-                                                   <opaqueInsets>
-                                                      <Insets />
-                                                   </opaqueInsets>
-                                                   <styleClass>
-                                                      <String fx:value="text-midday-more-1" />
-                                                      <String fx:value="check-box-midnight" />
-                                                   </styleClass>
-                                                   <cursor>
-                                                      <Cursor fx:constant="HAND" />
-                                                   </cursor>
-                                                </CheckBox>
                                             </children>
                                          </VBox>
                                       </children>
@@ -184,6 +66,208 @@
                           </padding>
                        </ScrollPane>
                     </content>
+                  </Tab>
+                  <Tab closable="false" text="Download">
+                     <content>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" styleClass="bg-midnight">
+                           <content>
+                              <AnchorPane styleClass="bg-midnight">
+                                 <children>
+                                    <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <VBox VBox.vgrow="ALWAYS">
+                                             <children>
+                                                <Label styleClass="text-midday" text="Download folder">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                   <VBox.margin>
+                                                      <Insets bottom="12.0" />
+                                                   </VBox.margin>
+                                                </Label>
+                                                <Label styleClass="text-midday-more-1" text="Select the folder the video will be downloaded to">
+                                                   <VBox.margin>
+                                                      <Insets bottom="10.0" />
+                                                   </VBox.margin>
+                                                   <font>
+                                                      <Font name="System Italic" size="13.0" />
+                                                   </font>
+                                                </Label>
+                                                <HBox alignment="CENTER_LEFT">
+                                                   <children>
+                                                      <Button fx:id="uiDownloadFolderButton" mnemonicParsing="false" text="Change folder">
+                                                         <HBox.margin>
+                                                            <Insets right="16.0" />
+                                                         </HBox.margin>
+                                                         <styleClass>
+                                                            <String fx:value="btn-midnight" />
+                                                            <String fx:value="text-midday" />
+                                                            <String fx:value="glow-on-hover" />
+                                                         </styleClass>
+                                                         <padding>
+                                                            <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
+                                                         </padding>
+                                                         <cursor>
+                                                            <Cursor fx:constant="HAND" />
+                                                         </cursor>
+                                                      </Button>
+                                                      <Label fx:id="uiDownloadFolder" styleClass="text-midday">
+                                                         <font>
+                                                            <Font name="Noto Mono" size="14.0" />
+                                                         </font>
+                                                      </Label>
+                                                   </children>
+                                                </HBox>
+                                                <Separator layoutX="10.0" layoutY="123.0">
+                                                   <padding>
+                                                      <Insets bottom="16.0" top="16.0" />
+                                                   </padding>
+                                                </Separator>
+                                                <Label layoutX="10.0" layoutY="142.0" styleClass="text-midday" text="Download automatically">
+                                                   <font>
+                                                      <Font name="System Bold" size="15.0" />
+                                                   </font>
+                                                   <VBox.margin>
+                                                      <Insets bottom="12.0" />
+                                                   </VBox.margin>
+                                                </Label>
+                                                <CheckBox fx:id="uiDownloadAutomatically" layoutX="10.0" layoutY="173.0" mnemonicParsing="false" text="Automatically download pasted video and proceed to download remaining video (until the specified limit)" wrapText="true">
+                                                   <opaqueInsets>
+                                                      <Insets />
+                                                   </opaqueInsets>
+                                                   <styleClass>
+                                                      <String fx:value="text-midday-more-1" />
+                                                      <String fx:value="check-box-midnight" />
+                                                   </styleClass>
+                                                   <cursor>
+                                                      <Cursor fx:constant="HAND" />
+                                                   </cursor>
+                                                </CheckBox>
+                                                <VBox fx:id="uiAutomaticDownloadContainer" prefHeight="200.0" prefWidth="100.0">
+                                                   <children>
+                                                      <Separator>
+                                                         <padding>
+                                                            <Insets bottom="16.0" top="16.0" />
+                                                         </padding>
+                                                      </Separator>
+                                                      <Label styleClass="text-midday" text="Download strategy">
+                                                         <font>
+                                                            <Font name="System Bold" size="15.0" />
+                                                         </font>
+                                                         <VBox.margin>
+                                                            <Insets bottom="12.0" />
+                                                         </VBox.margin>
+                                                      </Label>
+                                                      <HBox alignment="CENTER_LEFT">
+                                                         <children>
+                                                            <ComboBox fx:id="uiAutomaticDownloadStrategy" prefWidth="150.0">
+                                                               <HBox.margin>
+                                                                  <Insets right="12.0" />
+                                                               </HBox.margin>
+                                                            </ComboBox>
+                                                            <Label styleClass="text-midday-more-1" text="Strategy to use for automatic download" wrapText="true" />
+                                                         </children>
+                                                      </HBox>
+                                                      <Separator>
+                                                         <padding>
+                                                            <Insets bottom="16.0" top="16.0" />
+                                                         </padding>
+                                                      </Separator>
+                                                      <VBox fx:id="uiStaticStrategyContainer">
+                                                         <children>
+                                                            <Label styleClass="text-midday" text="Simultaneous video download limit">
+                                                               <font>
+                                                                  <Font name="System Bold" size="15.0" />
+                                                               </font>
+                                                               <VBox.margin>
+                                                                  <Insets bottom="12.0" />
+                                                               </VBox.margin>
+                                                            </Label>
+                                                            <HBox alignment="CENTER_LEFT">
+                                                               <children>
+                                                                  <Spinner fx:id="uiSimultaneousVideoLimit" editable="true" minWidth="80.0" prefWidth="80.0" styleClass="spinner-midnight">
+                                                                     <HBox.margin>
+                                                                        <Insets right="12.0" />
+                                                                     </HBox.margin>
+                                                                  </Spinner>
+                                                                  <Label maxWidth="600.0" styleClass="text-midday-more-1" text="Maximum number of simultaneous video that can be downloaded at the same time (when 'Download Automatically' is enabled)" wrapText="true" />
+                                                               </children>
+                                                            </HBox>
+                                                            <Separator>
+                                                               <padding>
+                                                                  <Insets bottom="16.0" top="16.0" />
+                                                               </padding>
+                                                            </Separator>
+                                                            <Label styleClass="text-midday" text="Simultaneous video of different providers">
+                                                               <font>
+                                                                  <Font name="System Bold" size="15.0" />
+                                                               </font>
+                                                               <VBox.margin>
+                                                                  <Insets bottom="12.0" />
+                                                               </VBox.margin>
+                                                            </Label>
+                                                            <CheckBox fx:id="uiSimultaneousVideoForEachProvider" mnemonicParsing="false" text="For each video provider, allow the specified simultaneous video limit" wrapText="true">
+                                                               <opaqueInsets>
+                                                                  <Insets />
+                                                               </opaqueInsets>
+                                                               <styleClass>
+                                                                  <String fx:value="text-midday-more-1" />
+                                                                  <String fx:value="check-box-midnight" />
+                                                               </styleClass>
+                                                               <cursor>
+                                                                  <Cursor fx:constant="HAND" />
+                                                               </cursor>
+                                                            </CheckBox>
+                                                         </children>
+                                                         <VBox.margin>
+                                                            <Insets bottom="12.0" />
+                                                         </VBox.margin>
+                                                      </VBox>
+                                                      <Separator>
+                                                         <padding>
+                                                            <Insets bottom="16.0" top="16.0" />
+                                                         </padding>
+                                                      </Separator>
+                                                      <VBox fx:id="uiAdaptiveStrategyContainer">
+                                                         <VBox.margin>
+                                                            <Insets bottom="12.0" />
+                                                         </VBox.margin>
+                                                         <children>
+                                                            <Label styleClass="text-midday" text="Download bandwidth limit">
+                                                               <font>
+                                                                  <Font name="System Bold" size="15.0" />
+                                                               </font>
+                                                               <VBox.margin>
+                                                                  <Insets bottom="12.0" />
+                                                               </VBox.margin>
+                                                            </Label>
+                                                            <HBox alignment="CENTER_LEFT">
+                                                               <children>
+                                                                  <Spinner fx:id="uiBandwidthLimit" editable="true" minWidth="80.0" prefWidth="80.0" styleClass="spinner-midnight">
+                                                                     <HBox.margin>
+                                                                        <Insets right="4.0" />
+                                                                     </HBox.margin>
+                                                                  </Spinner>
+                                                                  <Label maxWidth="40.0" minWidth="40.0" prefWidth="40.0" styleClass="text-midday-more-1" text="MB/s" />
+                                                                  <Label styleClass="text-midday-more-1" text="Video will be downloaded until the sum of the average download speed of each download reaches the specified value" wrapText="true" />
+                                                               </children>
+                                                            </HBox>
+                                                         </children>
+                                                      </VBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                           <padding>
+                              <Insets bottom="20.0" left="28.0" right="28.0" top="20.0" />
+                           </padding>
+                        </ScrollPane>
+                     </content>
                   </Tab>
                   <Tab closable="false" text="Executables">
                     <content>

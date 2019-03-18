@@ -3,6 +3,7 @@ package org.docheinstein.animedownloader.commons.utils;
 import org.docheinstein.animedownloader.settings.Setting;
 import org.docheinstein.animedownloader.settings.Settings;
 import org.docheinstein.commons.file.FileUtil;
+import org.docheinstein.commons.internal.DocCommonsLogger;
 import org.docheinstein.commons.logger.DocLogger;
 import org.docheinstein.animedownloader.commons.constants.Config;
 import org.docheinstein.commons.time.TimeUtil;
@@ -22,7 +23,15 @@ public class ApplicationUtil {
 
         ensureFolderExistence(Config.Folders.LOGS);
 
+
+        DocLogger.enableLogLevel(DocLogger.LogLevel.Debug, true, true);
+        DocLogger.enableLogLevel(DocLogger.LogLevel.Info, true, true);
+        DocLogger.enableLogLevel(DocLogger.LogLevel.Warn, true, true);
+        DocLogger.enableLogLevel(DocLogger.LogLevel.Error, true, true);
         DocLogger.enableLogLevel(DocLogger.LogLevel.Verbose, true, false);
+        DocCommonsLogger.enable(true);
+        DocCommonsLogger.addListener(message -> L.debug("@@ " + message));
+
         updateLoggingOnFilesPreference();
 
         Settings.instance().getLoggingSetting().addListener((setting, value) -> {

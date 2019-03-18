@@ -6,8 +6,10 @@ import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.docheinstein.animedownloader.commons.constants.Const;
 import org.docheinstein.animedownloader.ui.base.InstantiableController;
 import org.docheinstein.commons.file.FileUtil;
+import org.docheinstein.commons.javafx.FXUtil;
 import org.docheinstein.commons.logger.DocLogger;
 import org.docheinstein.animedownloader.settings.Settings;
 import org.docheinstein.commons.types.StringUtil;
@@ -25,29 +27,38 @@ public class SettingsWindowController implements InstantiableController {
     @FXML
     private Node uiRoot;
 
-
     @FXML
     private Button uiDownloadFolderButton;
 
     @FXML
     private Label uiDownloadFolder;
 
-
     @FXML
     private CheckBox uiRemoveAfterDownload;
-
 
     @FXML
     private CheckBox uiDownloadAutomatically;
 
+    @FXML
+    private Node uiAutomaticDownloadContainer;
 
     @FXML
-    private Spinner<Integer> uiSimultaneousVideo;
+    private ComboBox<Settings.AutomaticDownloadStrategy> uiAutomaticDownloadStrategy;
 
+    @FXML
+    private Node uiStaticStrategyContainer;
+
+    @FXML
+    private Spinner<Integer> uiSimultaneousVideoLimit;
 
     @FXML
     private CheckBox uiSimultaneousVideoForEachProvider;
 
+    @FXML
+    private Node uiAdaptiveStrategyContainer;
+
+    @FXML
+    private Spinner<Double> uiBandwidthLimit;
 
     @FXML
     private Button uiChromeDriverButton;
@@ -65,7 +76,6 @@ public class SettingsWindowController implements InstantiableController {
 
     @FXML
     private Label uiFFmpeg;
-
 
     @FXML
     private CheckBox uiLogging;
@@ -86,6 +96,10 @@ public class SettingsWindowController implements InstantiableController {
 
     @FXML
     public void initialize() {
+        FXUtil.setExistent(uiAutomaticDownloadContainer, false);
+        // FXUtil.setExistent(uiStaticStrategyContainer, false);
+        FXUtil.setExistent(uiAdaptiveStrategyContainer, false);
+
         uiCancel.setOnMouseClicked(event -> closeWindow());
 
         uiOk.setOnMouseClicked(event -> {
@@ -108,8 +122,27 @@ public class SettingsWindowController implements InstantiableController {
             L.debug("Change folder button clicked, opening directory chooser");
         });
 
-        uiSimultaneousVideo.setValueFactory(
+        uiDownloadAutomatically.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            FXUtil.setExistent(uiAutomaticDownloadContainer, newValue);
+        });
+
+        uiAutomaticDownloadStrategy.getItems().setAll(
+            Settings.AutomaticDownloadStrategy.Static,
+            Settings.AutomaticDownloadStrategy.Adaptive
+        );
+
+        uiAutomaticDownloadStrategy.valueProperty().addListener((observable, oldValue, newValue) -> {
+            FXUtil.setExistent(uiAdaptiveStrategyContainer, newValue == Settings.AutomaticDownloadStrategy.Adaptive);
+            // FXUtil.setExistent(uiStaticStrategyContainer, newValue == Settings.AutomaticDownloadStrategy.Static);
+        });
+
+        uiSimultaneousVideoLimit.setValueFactory(
             new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10));
+
+        uiBandwidthLimit.setValueFactory(
+            new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 100, 1, 0.1)
+        );
+
 
         setCurrentDownloadFolderValue(
             Settings.instance().getDownloadFolderSetting().getValue().getAbsolutePath());
@@ -117,10 +150,14 @@ public class SettingsWindowController implements InstantiableController {
             Settings.instance().getRemoveAfterDownloadSetting().getValue());
         setCurrentDownloadAutomaticallyValue(
             Settings.instance().getDownloadAutomaticallySetting().getValue());
+        setCurrentAutomaticDownloadStrategyValue(
+            Settings.instance().getAutomaticDownloadStrategySetting().getValue());
         setSimultaneousVideoLimitValue(
             Settings.instance().getSimultaneousVideoLimitSetting().getValue());
         setSimultaneousVideoLimitForEachProvider(
             Settings.instance().getSimultaneousVideoForEachProvider().getValue());
+        setExpectedBandwidth(
+            Settings.instance().getBandwidthLimit().getValue() / Const.Units.MB);
         setChromeDriverFile(
             Settings.instance().getChromeDriverSetting().getValue());
         setChromeDriverGhostModeValue(
@@ -202,12 +239,20 @@ public class SettingsWindowController implements InstantiableController {
         uiDownloadAutomatically.selectedProperty().setValue(value);
     }
 
+    private void setCurrentAutomaticDownloadStrategyValue(Settings.AutomaticDownloadStrategy strat) {
+        uiAutomaticDownloadStrategy.setValue(strat);
+    }
+
     private void setSimultaneousVideoLimitValue(int value) {
-        uiSimultaneousVideo.getValueFactory().setValue(value);
+        uiSimultaneousVideoLimit.getValueFactory().setValue(value);
     }
 
     private void setSimultaneousVideoLimitForEachProvider(boolean value) {
         uiSimultaneousVideoForEachProvider.selectedProperty().setValue(value);
+    }
+
+    private void setExpectedBandwidth(double mbps) {
+        uiBandwidthLimit.getValueFactory().setValue(mbps);
     }
 
     private void setChromeDriverFile(File file) {
@@ -238,16 +283,24 @@ public class SettingsWindowController implements InstantiableController {
 
         Settings s = Settings.instance();
 
+        Settings.AutomaticDownloadStrategy strat = uiAutomaticDownloadStrategy.getValue();
+
         s.getDownloadFolderSetting().updateSetting(
             new File(uiDownloadFolder.getText()));
         s.getRemoveAfterDownloadSetting().updateSetting(
             uiRemoveAfterDownload.isSelected());
         s.getDownloadAutomaticallySetting().updateSetting(
             uiDownloadAutomatically.isSelected());
+        s.getAutomaticDownloadStrategySetting().updateSetting(
+            strat);
         s.getSimultaneousVideoLimitSetting().updateSetting(
-            uiSimultaneousVideo.getValue());
+            uiSimultaneousVideoLimit.getValue());
         s.getSimultaneousVideoForEachProvider().updateSetting(
             uiSimultaneousVideoForEachProvider.isSelected());
+        s.getBandwidthLimit().updateSetting(
+            strat == Settings.AutomaticDownloadStrategy.Adaptive ?
+                ((int) (uiBandwidthLimit.getValue() * Const.Units.MB)) :
+                0);
         s.getChromeDriverSetting().updateSetting(
             new File(uiChromeDriver.getText()));
         s.getChromeDriverGhostModeSetting().updateSetting(

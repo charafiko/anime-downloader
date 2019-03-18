@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Controller of {@link MainWindow}
@@ -59,6 +60,9 @@ public class MainWindowController
     private Button uiOpenDownloadFolder;
 
     @FXML
+    private Button uiStartDownload;
+
+    @FXML
     private ListView<Node> uiDownloadList;
 
     @Override
@@ -66,8 +70,11 @@ public class MainWindowController
         return "main_window.fxml";
     }
 
+    private AtomicInteger mInDownloadCount = new AtomicInteger(0);
+
     @FXML
     private void initialize() {
+
         uiOpenDownloadFolder.setOnMouseClicked(event ->
             ThreadUtil.start(() -> {
                 if (!Desktop.isDesktopSupported()) {
@@ -135,6 +142,20 @@ public class MainWindowController
                 return cell;
             }
         });
+
+        // Start download button
+        uiStartDownload.setOnMouseClicked(event -> {
+            L.debug("Starting automatic download");
+            checkForNextVideoToDownload();
+        });
+
+        // Enable/disable automatic download based on the automatic download
+        // setting
+        uiStartDownload.setDisable(
+            !Settings.instance().getDownloadAutomaticallySetting().getValue());
+
+        Settings.instance().getDownloadAutomaticallySetting().addListener(
+            (setting, enabled) ->  uiStartDownload.setDisable(!enabled));
 
         loadVideosFromCache();
     }
@@ -298,24 +319,39 @@ public class MainWindowController
             return;
         }
 
+        Settings.AutomaticDownloadStrategy strategy =
+            Settings.instance().getAutomaticDownloadStrategySetting().getValue();
+
+        boolean stillToDownload;
+        do {
+            if (strategy == Settings.AutomaticDownloadStrategy.Static) {
+                L.debug("Checking for automatic download using 'Static' strategy");
+                stillToDownload = checkForNextVideoToDownloadStaticStrategy();
+            } else if (strategy == Settings.AutomaticDownloadStrategy.Adaptive) {
+                L.debug("Checking for automatic download using 'Adaptive' strategy");
+                stillToDownload = checkForNextVideoToDownloadAdaptiveStrategy();
+            } else {
+                L.warn("Do not know strategy: " + strategy);
+                stillToDownload = false;
+            }
+        } while (stillToDownload);
+    }
+
+    /*
+     * The logic of the static strategy is just download until the current
+     * download count is lower than the specified limit, eventually referred
+     * to each provider.
+     */
+    private VideoRowController getNextVideoToDownloadUsingStaticStrategy() {
+        int downloadLimit  = Settings.instance().getSimultaneousVideoLimitSetting().getValue();
         boolean forEachProvider = Settings.instance().getSimultaneousVideoForEachProvider().getValue();
 
-        Map<VideoProvider, Integer> inDownloadVideos = new HashMap<>();
-
+        Map<VideoProvider, Integer> inDownloadVideos = getInDownloadVideos();
         int inDownloadCount = 0;
 
-        for (Map.Entry<VideoRowController, Node> row : mVideoRows.entrySet()) {
-            VideoRowController videoRow = row.getKey();
-            if (videoRow.getState() == VideoRowController.VideoDownloadState.Downloading) {
-                inDownloadVideos.put(
-                    videoRow.getProvider(),
-                    inDownloadVideos.getOrDefault(videoRow.getProvider(), 0) + 1
-                );
-                inDownloadCount++;
-            }
+        for (Integer count : inDownloadVideos.values()) {
+            inDownloadCount += count;
         }
-
-        int downloadLimit  = Settings.instance().getSimultaneousVideoLimitSetting().getValue();
 
         L.debug("There are " + inDownloadCount + " video in download");
         L.debug("The download limit is: " + downloadLimit);
@@ -325,7 +361,7 @@ public class MainWindowController
         // is not true and so the limit is referred to a global limit
         if (!forEachProvider && inDownloadCount >= downloadLimit) {
             L.debug("Video won't be started automatically since it would exceed the limit");
-            return;
+            return null;
         }
 
         L.debug("Searching for the first available video to start automatically");
@@ -338,13 +374,88 @@ public class MainWindowController
 
                 if (inDownloadForProvider < downloadLimit) {
                     L.debug("Found video still to download, automatically downloading it");
-                    video.download();
-                    return;
+                    return video;
                 }
             }
         }
 
         L.debug("No video to download found, doing nothing");
+        return null;
+    }
+
+    /*
+     * The logic of the adaptive strategy is start to download videos until
+     * one of the following conditions is met.
+     * 1) Just like static download, if the current download count is not lower
+     * then the specified limit, nothing else is automatically put in download
+     * 2) Moreover, if the current sum of the download bandwidth exceed the
+     * specified limit, nothing else is automatically put in download
+     */
+    private boolean checkForNextVideoToDownloadAdaptiveStrategy() {
+        VideoRowController videoToDownload = getNextVideoToDownloadUsingStaticStrategy();
+        if (videoToDownload == null)
+            return false; // Nothing even with static strategy, doing nothing
+
+        L.debug("Found video that could be download, checking for bandwidth" +
+                " before proceed");
+
+        int bandwidthLimit = Settings.instance().getBandwidthLimit().getValue();
+        L.debug("Bandwidth limit is: " + (bandwidthLimit / 1000) + "KB/s");
+
+        // Check for at least a few second if the current bandwidth is below the threshold
+        for (int i = 0; i < Config.Download.ADAPTIVE_STRATEGY_SECONDS_BEFORE_PROCEED; i++) {
+            int currentBandwidth = 0;
+
+            // Unlike static strategy, here we have to check for bandwidth too
+            for (Map.Entry<VideoRowController, Node> row : mVideoRows.entrySet()) {
+                VideoRowController video = row.getKey();
+                int bw = video.getInstantBandwidth();
+                L.debug("Bandwidth of video " + video.getVideoInfo().title + " is " + (bw / 1000) + "KB/s");
+                currentBandwidth += bw;
+            }
+
+            L.debug("#" + (i + 1) + " Total current bandwidth is " + (currentBandwidth / 1000)+ "KB/s");
+            if (currentBandwidth > bandwidthLimit) {
+                L.debug("Can't download since bandwidth limit would be exceeded");
+                return false; // Current bandwidth is above the threshold, doing nothing
+            }
+
+            if (i < Config.Download.ADAPTIVE_STRATEGY_SECONDS_BEFORE_PROCEED - 1) {
+                L.debug("Current bandwidth is below the threshold, waiting 1s before next check...");
+                ThreadUtil.sleep(1000);
+            }
+        }
+
+        // If we are here, then for at least a few seconds the current bandwidth has been
+        // below than the limit, thus actually download the video
+
+        L.debug("Actually downloading video using 'Adaptive' strategy");
+        videoToDownload.download();
+        return true;
+    }
+
+    private boolean checkForNextVideoToDownloadStaticStrategy() {
+        VideoRowController videoToDownload = getNextVideoToDownloadUsingStaticStrategy();
+        if (videoToDownload == null)
+            return false;
+        videoToDownload.download();
+        return true;
+    }
+
+    private Map<VideoProvider, Integer> getInDownloadVideos() {
+        Map<VideoProvider, Integer> inDownloadVideos = new HashMap<>();
+
+        for (Map.Entry<VideoRowController, Node> row : mVideoRows.entrySet()) {
+            VideoRowController videoRow = row.getKey();
+            if (videoRow.getState() == VideoRowController.VideoDownloadState.Downloading) {
+                inDownloadVideos.put(
+                    videoRow.getProvider(),
+                    inDownloadVideos.getOrDefault(videoRow.getProvider(), 0) + 1
+                );
+            }
+        }
+
+        return inDownloadVideos;
     }
 
     @Override
