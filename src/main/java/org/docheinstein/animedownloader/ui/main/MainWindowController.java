@@ -319,22 +319,28 @@ public class MainWindowController
             return;
         }
 
-        Settings.AutomaticDownloadStrategy strategy =
-            Settings.instance().getAutomaticDownloadStrategySetting().getValue();
+        ThreadUtil.start(() -> {
+            Settings.AutomaticDownloadStrategy strategy =
+                Settings.instance().getAutomaticDownloadStrategySetting().getValue();
 
-        boolean stillToDownload;
-        do {
-            if (strategy == Settings.AutomaticDownloadStrategy.Static) {
-                L.debug("Checking for automatic download using 'Static' strategy");
-                stillToDownload = checkForNextVideoToDownloadStaticStrategy();
-            } else if (strategy == Settings.AutomaticDownloadStrategy.Adaptive) {
-                L.debug("Checking for automatic download using 'Adaptive' strategy");
-                stillToDownload = checkForNextVideoToDownloadAdaptiveStrategy();
-            } else {
-                L.warn("Do not know strategy: " + strategy);
-                stillToDownload = false;
-            }
-        } while (stillToDownload);
+            boolean stillToDownload;
+            do {
+                if (strategy == Settings.AutomaticDownloadStrategy.Static) {
+                    L.debug("Checking for automatic download using 'Static' strategy");
+                    stillToDownload = checkForNextVideoToDownloadStaticStrategy();
+                } else if (strategy == Settings.AutomaticDownloadStrategy.Adaptive) {
+                    L.debug("Checking for automatic download using 'Adaptive' strategy");
+                    stillToDownload = checkForNextVideoToDownloadAdaptiveStrategy();
+                    L.debug("Waiting " +
+                        Config.Download.ADAPTIVE_STRATEGY_SECONDS_TO_WAIT_AFTER_A_DOWNLOAD +
+                        " before check again for a download");
+                    ThreadUtil.sleep(Config.Download.ADAPTIVE_STRATEGY_SECONDS_TO_WAIT_AFTER_A_DOWNLOAD * 1000);
+                } else {
+                    L.warn("Do not know strategy: " + strategy);
+                    stillToDownload = false;
+                }
+            } while (stillToDownload);
+        });
     }
 
     /*
@@ -403,7 +409,8 @@ public class MainWindowController
         L.debug("Bandwidth limit is: " + (bandwidthLimit / 1000) + "KB/s");
 
         // Check for at least a few second if the current bandwidth is below the threshold
-        for (int i = 0; i < Config.Download.ADAPTIVE_STRATEGY_SECONDS_BEFORE_PROCEED; i++) {
+        int attemptAt0Bandwidth = 0;
+        for (int attempt = 0; attempt < Config.Download.ADAPTIVE_STRATEGY_SECONDS_TO_WAIT_UNDER_THRESHOLD_BEFORE_DOWNLOAD; attempt++) {
             int currentBandwidth = 0;
 
             // Unlike static strategy, here we have to check for bandwidth too
@@ -414,13 +421,23 @@ public class MainWindowController
                 currentBandwidth += bw;
             }
 
-            L.debug("#" + (i + 1) + " Total current bandwidth is " + (currentBandwidth / 1000) + "KB/s");
+            L.debug("#" + (attempt + 1) + " Total current bandwidth is " + (currentBandwidth / 1000) + "KB/s");
+
             if (currentBandwidth > bandwidthLimit) {
                 L.debug("Can't download since bandwidth limit would be exceeded");
                 return false; // Current bandwidth is above the threshold, doing nothing
             }
 
-            if (i < Config.Download.ADAPTIVE_STRATEGY_SECONDS_BEFORE_PROCEED - 1) {
+            if (currentBandwidth <= 0) {
+                attemptAt0Bandwidth++;
+            }
+
+            if (attemptAt0Bandwidth ==
+                Config.Download.ADAPTIVE_STRATEGY_SECONDS_TO_WAIT_UNDER_THRESHOLD_BEFORE_DOWNLOAD_IF_CURRENT_BANDWIDTH_IS_0) {
+                break;
+            }
+
+            if (attempt < Config.Download.ADAPTIVE_STRATEGY_SECONDS_TO_WAIT_UNDER_THRESHOLD_BEFORE_DOWNLOAD - 1) {
                 L.debug("Current bandwidth is below the threshold, waiting 1s before next check...");
                 ThreadUtil.sleep(1000);
             }

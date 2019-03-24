@@ -143,6 +143,13 @@ public class VVVVIDMarionette
             mVideoInfo.title = mDriver.findElement(
                 By.className("player-info-show")).getText();
 
+            L.debug("Retrieved title is: " + mVideoInfo.title);
+
+            L.debug("Current page is: " + mDriver.getPageSource());
+
+            if (!StringUtil.isValid(mVideoInfo.title))
+                mVideoInfo.title = String.valueOf(System.currentTimeMillis() / 1000);
+
             // Replaces bad characters with _
             mVideoInfo.filename = mVideoInfo.title.replaceAll("\\W+", "_");
 

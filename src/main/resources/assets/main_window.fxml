@@ -45,7 +45,7 @@
                         <String fx:value="glow-on-hover" />
                      </styleClass>
                      <tooltip>
-                        <Tooltip text="Settings" />
+                        <Tooltip text="Start automatic download" />
                      </tooltip>
                      <HBox.margin>
                         <Insets right="12.0" />

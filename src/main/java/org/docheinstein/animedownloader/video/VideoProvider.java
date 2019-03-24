@@ -30,7 +30,8 @@ public enum  VideoProvider {
         if (!StringUtil.isValid(url))
             return null;
 
-        if (url.contains("openload") || url.contains("oload"))
+        if (url.contains("openload") || url.contains("oload") ||
+            url.contains("oladblock"))
             return Openload;
         if (url.contains("vvvvid"))
             return VVVVID;

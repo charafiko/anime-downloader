@@ -251,7 +251,9 @@ public class VideoRowController
      * @return the instant bandwidth
      */
     public int getInstantBandwidth() {
-        return mLastBytesPerSecond;
+        if (mCurrentVideoState == VideoDownloadState.Downloading)
+            return mLastBytesPerSecond;
+        return 0;
     }
 
     /**
@@ -482,8 +484,8 @@ public class VideoRowController
         // deltaMillis : deltaBytes = 1000 : mLastBytesPerSecond
         // mLastBytesPerSecond = deltaBytes  * 1000 / deltaMillis
 
-        int kilobytesPerSecond = (int) (deltaBytes / deltaMillis);
-        mLastBytesPerSecond = (int) (deltaBytes * 1000 / deltaMillis);
+        int kilobytesPerSecond = Integer.max(0, (int) (deltaBytes / deltaMillis));
+        mLastBytesPerSecond = Integer.max(0, (int) (deltaBytes * 1000 / deltaMillis));
 
         L.verbose("Delta time: " + deltaMillis);
         L.verbose("Delta bytes: " + deltaBytes);
@@ -498,11 +500,15 @@ public class VideoRowController
         double percentageBarWidth = parentWidth *
             /* rateo */ (double) downloadedBytes / (double) mVideoInfo.size;
 
-
         Platform.runLater(() -> {
             uiCurrent.setText(String.valueOf(downloadedBytes / M));
 
-            uiSpeed.setText(String.valueOf(kilobytesPerSecond));
+            if (kilobytesPerSecond >= 0) {
+                uiSpeed.setText(String.valueOf(kilobytesPerSecond));
+            } else {
+                L.warn("Download speed below 0; WTF?");
+                uiSpeed.setText("0");
+            }
 
             double newPercentageBarAnchor = parentWidth - percentageBarWidth;
 
@@ -524,7 +530,6 @@ public class VideoRowController
     @Override
     public void onVideoDownloadFinished() {
         L.info("Download of " + mVideoInfo.title + " is finished");
-        mLastBytesPerSecond = 0;
         changeStateAndUpdateUI(VideoDownloadState.Downloaded, false);
         notifyDownloadEnd();
     }
@@ -532,7 +537,6 @@ public class VideoRowController
     @Override
     public void onVideoDownloadAborted() {
         L.info("Download of " + mVideoInfo.title + " has been aborted");
-        mLastBytesPerSecond = 0;
         changeStateAndUpdateUI(VideoDownloadState.Aborted, false);
     }
 

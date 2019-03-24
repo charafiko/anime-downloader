@@ -96,6 +96,8 @@ public class Config {
     }
 
     public static class Download {
-        public static final int ADAPTIVE_STRATEGY_SECONDS_BEFORE_PROCEED = 10;
+        public static final int ADAPTIVE_STRATEGY_SECONDS_TO_WAIT_UNDER_THRESHOLD_BEFORE_DOWNLOAD_IF_CURRENT_BANDWIDTH_IS_0 = 2;
+        public static final int ADAPTIVE_STRATEGY_SECONDS_TO_WAIT_UNDER_THRESHOLD_BEFORE_DOWNLOAD = 10;
+        public static final int ADAPTIVE_STRATEGY_SECONDS_TO_WAIT_AFTER_A_DOWNLOAD = 5;
     }
 }

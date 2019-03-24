@@ -28,7 +28,7 @@ public class ApplicationUtil {
         DocLogger.enableLogLevel(DocLogger.LogLevel.Info, true, true);
         DocLogger.enableLogLevel(DocLogger.LogLevel.Warn, true, true);
         DocLogger.enableLogLevel(DocLogger.LogLevel.Error, true, true);
-        DocLogger.enableLogLevel(DocLogger.LogLevel.Verbose, true, false);
+        DocLogger.enableLogLevel(DocLogger.LogLevel.Verbose, true, true);
         DocCommonsLogger.enable(true);
         DocCommonsLogger.addListener(message -> L.debug("@@ " + message));
 
